@@ -1,6 +1,7 @@
 import HeroSection from "./_components/hero-section";
 import ServicesSection from "./_components/services-section";
 import TechStacksSection from "./_components/tech-stacks-section";
+import CtaSection from "./_components/cta-section";
 import Footer from "./_components/footer";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
         <HeroSection />
         <ServicesSection />
         <TechStacksSection />
+        <CtaSection />
       </main>
       <Footer />
     </div>

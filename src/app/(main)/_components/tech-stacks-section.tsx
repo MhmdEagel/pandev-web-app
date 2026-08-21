@@ -18,9 +18,7 @@ const TECH_STACKS = [
 ];
 
 const RADIUS_DESKTOP = 280;
-const RADIUS_MOBILE = 160;
 const ICON_SIZE_DESKTOP = 72;
-const ICON_SIZE_MOBILE = 56;
 
 export default function TechStacksSection() {
   const total = TECH_STACKS.length;
@@ -36,7 +34,6 @@ export default function TechStacksSection() {
     });
 
   const desktopPositions = getPositions(RADIUS_DESKTOP);
-  const mobilePositions = getPositions(RADIUS_MOBILE);
 
   return (
     <section
@@ -88,48 +85,7 @@ export default function TechStacksSection() {
           })}
         </svg>
 
-        {/* SVG Lines - Mobile */}
-        <svg
-          className="absolute block md:hidden"
-          width={RADIUS_MOBILE * 2 + ICON_SIZE_MOBILE}
-          height={RADIUS_MOBILE * 2 + ICON_SIZE_MOBILE}
-          style={{
-            left: `calc(50% - ${RADIUS_MOBILE + ICON_SIZE_MOBILE / 2}px)`,
-            top: `calc(50% - ${RADIUS_MOBILE + ICON_SIZE_MOBILE / 2}px)`,
-          }}
-        >
-          {mobilePositions.map((pos, i) => {
-            const center = RADIUS_MOBILE + ICON_SIZE_MOBILE / 2;
-            return (
-              <line
-                key={`line-mobile-${i}`}
-                x1={center}
-                y1={center}
-                x2={center + pos.x}
-                y2={center + pos.y}
-                stroke="currentColor"
-                strokeWidth={1}
-                className="opacity-50 text-border"
-              />
-            );
-          })}
-          {mobilePositions.map((pos, i) => {
-            const next = mobilePositions[(i + 1) % total];
-            const center = RADIUS_MOBILE + ICON_SIZE_MOBILE / 2;
-            return (
-              <line
-                key={`circle-line-mobile-${i}`}
-                x1={center + pos.x}
-                y1={center + pos.y}
-                x2={center + next.x}
-                y2={center + next.y}
-                stroke="currentColor"
-                strokeWidth={1}
-                className="opacity-50 text-border"
-              />
-            );
-          })}
-        </svg>
+        {/* SVG Lines - Mobile (Hidden) */}
 
         {/* Tech Stack Icons - Desktop */}
         {TECH_STACKS.map((stack, index) => {
@@ -160,40 +116,12 @@ export default function TechStacksSection() {
           );
         })}
 
-        {/* Tech Stack Icons - Mobile */}
-        {TECH_STACKS.map((stack, index) => {
-          const pos = mobilePositions[index];
-          return (
-            <div
-              key={`mobile-${stack.name}`}
-              className="absolute z-10 flex md:hidden animate-float"
-              style={{
-                left: `calc(50% + ${pos.x}px - ${ICON_SIZE_MOBILE / 2}px)`,
-                top: `calc(50% + ${pos.y}px - ${ICON_SIZE_MOBILE / 2}px)`,
-                animationDuration: `${3 + (index % 3)}s`,
-                animationDelay: `${index * 0.3}s`,
-              }}
-            >
-              <div
-                className="rounded-full bg-white flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.3)]"
-                style={{ width: ICON_SIZE_MOBILE, height: ICON_SIZE_MOBILE }}
-              >
-                <Image
-                  src={stack.icon}
-                  alt={stack.name}
-                  width={28}
-                  height={28}
-                  className="object-contain"
-                />
-              </div>
-            </div>
-          );
-        })}
+        {/* Tech Stack Icons - Mobile (Hidden) */}
 
         {/* Center Content */}
-        <div className="relative z-20 px-4 text-center" style={{ width: 480 }}>
+        <div className="relative z-20 px-4 text-center">
           <h2 className="text-4xl font-bold md:text-6xl">TECH STACKS</h2>
-          <p className="mt-4 text-sm md:text-lg text-muted-foreground">
+          <p className="mt-4 text-base md:text-lg text-muted-foreground w-64 md:w-128 mx-auto">
             Projek-projek dibangun menggunakan stacks dan teknologi yang stable dan terbaru
           </p>
         </div>

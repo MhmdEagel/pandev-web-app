@@ -19,7 +19,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Arkana | Software House",
+  title: "PanDev | Software House",
   description:
     "Arkana adalah software house di Indonesia yang menawarkan solusi aplikasi maupun kebutuhan digital lainnya.",
 };

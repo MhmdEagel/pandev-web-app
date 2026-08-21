@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils"
 import { MenuIcon, ZapIcon } from "lucide-react"
 
 const NAV_ITEMS = [
-  { href: "/layanan", label: "Layanan" },
   { href: "/portofolio", label: "Portofolio" },
   { href: "/tentang", label: "Tentang" },
   { href: "/kontak", label: "Kontak" },

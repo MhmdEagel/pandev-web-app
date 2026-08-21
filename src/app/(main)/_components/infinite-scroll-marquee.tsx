@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export default function InfiniteScrollMarquee() {
   return (
-    <div className="flex flex-col gap-8 absolute top-30 left-0 right-0 -z-10">
+    <div className="flex flex-col gap-8 absolute top-40 left-0 right-0 -z-10">
       <div className="flex items-center justify-center w-full ">
         <Marquee pauseOnHover={false}>
           <span

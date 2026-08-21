@@ -3,7 +3,7 @@ import InfiniteScrollMarquee from "./infinite-scroll-marquee";
 
 export default function HeroSection() {
   return (
-    <section className="text-center min-h-screen mt-16">
+    <section className="text-center  mt-16">
       <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold">PANDEV</h1>
       <div className="text-lg md:text-2xl lg:text-4xl mt-1">
         Unlock What&apos;s Possible
@@ -14,13 +14,15 @@ export default function HeroSection() {
       <div className="mt-4">
         <div className="relative z-10">
           <Image
-            className="mx-auto"
-            width={700}
+            className="mx-auto w-auto h-auto"
+            width={800}
             height={600}
-            src={"/assets/new-hero-image.png"}
+            src={"/assets/hero-image.svg"}
             alt="Hero Image"
           />
-          <InfiniteScrollMarquee />
+          <div className="md:block hidden">
+            <InfiniteScrollMarquee />
+          </div>
         </div>
         {/* ===== Infinite Scroll Mockup ====== */}
       </div>
