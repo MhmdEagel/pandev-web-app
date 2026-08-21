@@ -34,12 +34,12 @@ export default function Navbar() {
         <Link
           href="/"
           className="flex items-center gap-2 font-heading text-lg font-semibold tracking-tight"
-          aria-label="Arkana - Beranda"
+          aria-label="PanDev - Beranda"
         >
           <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <ZapIcon className="size-4" aria-hidden="true" />
           </span>
-          Arkana
+          PANDEV
         </Link>
 
         <nav
@@ -48,19 +48,14 @@ export default function Navbar() {
         >
           {NAV_ITEMS.map((item) => {
             const active = isActive(pathname, item.href)
-
+            console.log(pathname)
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={cn(
-                  "relative rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  "after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:origin-left after:rounded-full after:bg-foreground after:transition-transform after:duration-200 hover:after:scale-x-100",
-                  active
-                    ? "text-foreground after:scale-x-100"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
+                className="relative rounded-md px-3 py-2 text-sm font-medium text-foreground"
+            
               >
                 {item.label}
               </Link>
@@ -81,7 +76,7 @@ export default function Navbar() {
           </SheetTrigger>
           <SheetContent side="right" className="w-3/4 sm:max-w-sm">
             <SheetTitle className="font-heading text-lg font-semibold tracking-tight">
-              Arkana
+              PANDEV
             </SheetTitle>
             <nav
               className="flex flex-col gap-1"

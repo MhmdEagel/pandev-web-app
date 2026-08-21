@@ -19,12 +19,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Arkana | Software House Indonesia",
-    template: "%s | Arkana",
-  },
+  title: "Arkana | Software House",
   description:
-    "Arkana adalah software house di Indonesia yang menawarkan solusi aplikasi untuk bisnis dan individu.",
+    "Arkana adalah software house di Indonesia yang menawarkan solusi aplikasi maupun kebutuhan digital lainnya.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -33,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased ${montserrat.variable}`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex flex-col min-h-full">
         <QueryProvider>
           {children}
         </QueryProvider>

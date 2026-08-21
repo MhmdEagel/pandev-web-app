@@ -1,0 +1,80 @@
+import {
+  DatabaseIcon,
+  GraduationCapIcon,
+  HardDriveIcon,
+  LockIcon,
+  MonitorSmartphoneIcon,
+  PaintbrushIcon,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+
+const SERVICE_ITEMS = [
+  {
+    icon: <MonitorSmartphoneIcon className="size-10" />,
+    label: "Web, Mobile, and Desktop App",
+    description:
+      "Berbagai ide aplikasi Anda, di beragam platform dalam bentuk website, mobile, ataupun desktop.",
+  },
+  {
+    icon: <LockIcon className="size-10" />,
+    label: "Cyber Security Tools",
+    description:
+      "Aplikasi dan tools untuk pentest dalam bentuk hardware maupun software.",
+  },
+  {
+    icon: <PaintbrushIcon className="size-10" />,
+    label: "Design & Multimedia",
+    description:
+      "Melayani pembuatan poster, logo, spanduk, dan video editing untuk kebutuhan bisnis Anda.",
+  },
+  {
+    icon: <HardDriveIcon className="size-10" />,
+    label: "IoT Solutions",
+    description:
+      "Perangkat dan sistem terintegrasi untuk monitoring, kontrol, dan otomasi berbagai kebutuhan",
+  },
+  {
+    icon: <GraduationCapIcon className="size-10" />,
+    label: "Academic Assistant",
+    description: "Joki dan bantuan tugas sekolah dan kuliah Anda dengan mudah.",
+  },
+  {
+    icon: <DatabaseIcon className="size-10" />,
+    label: "Data & GIS",
+    description: "Jasa analisis, pengolahan, dan pemetaan data.",
+  },
+];
+
+export default function ServicesSection() {
+  return (
+    <section
+      id="services-section"
+      className="w-full p-4 md:p-8 space-y-6"
+    >
+      <div className="max-w-6xl mx-auto w-full space-y-6">
+        <div>
+          <div className="uppercase tracking-wider">our services</div>
+          <div className="mb-1 text-4xl font-bold uppercase">
+            Satu tempat beragam solusi
+          </div>
+          <div className="text-xl">Dari aplikasi hingga kebutuhan lainnya</div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {SERVICE_ITEMS.map((item) => (
+            <Card className="p-4" key={`service-item-${item.label}`}>
+              <CardContent>
+                <div>
+                  <div className="flex items-center justify-center mb-4 text-white rounded-full bg-primary w-18 h-18">
+                    {item.icon}
+                  </div>
+                  <div className="text-lg font-bold">{item.label}</div>
+                  <div>{item.description}</div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
