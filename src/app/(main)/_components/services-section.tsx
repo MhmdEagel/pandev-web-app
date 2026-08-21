@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import {
   DatabaseIcon,
   GraduationCapIcon,
@@ -45,6 +48,21 @@ const SERVICE_ITEMS = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
 export default function ServicesSection() {
   return (
     <section
@@ -52,28 +70,47 @@ export default function ServicesSection() {
       className="w-full p-4 md:p-8 space-y-6"
     >
       <div className="max-w-6xl mx-auto w-full space-y-6">
-        <div>
-          <div className="uppercase tracking-wider text-sm sm:text-base">our services</div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="uppercase tracking-wider text-sm sm:text-base">
+            our services
+          </div>
           <div className="mb-1 text-2xl md:text-4xl font-bold uppercase">
             Satu tempat beragam solusi
           </div>
-          <div className="text-lg md:text-xl">Dari aplikasi hingga kebutuhan lainnya</div>
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="text-lg md:text-xl">
+            Dari aplikasi hingga kebutuhan lainnya
+          </div>
+        </motion.div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 gap-4 md:grid-cols-3"
+        >
           {SERVICE_ITEMS.map((item) => (
-            <Card className="p-4" key={`service-item-${item.label}`}>
-              <CardContent>
-                <div>
-                  <div className="flex items-center justify-center mb-4 text-white rounded-full bg-primary w-12 h-12 md:w-18 md:h-18">
-                    {item.icon}
+            <motion.div key={`service-item-${item.label}`} variants={itemVariants}>
+              <Card className="p-4 h-full">
+                <CardContent>
+                  <div>
+                    <div className="flex items-center justify-center mb-4 text-white rounded-full bg-primary w-12 h-12 md:w-18 md:h-18">
+                      {item.icon}
+                    </div>
+                    <div className="text-base sm:text-lg font-bold">
+                      {item.label}
+                    </div>
+                    <div>{item.description}</div>
                   </div>
-                  <div className="text-base sm:text-lg font-bold">{item.label}</div>
-                  <div>{item.description}</div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

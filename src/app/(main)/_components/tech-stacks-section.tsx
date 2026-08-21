@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 
 const TECH_STACKS = [
@@ -85,8 +83,6 @@ export default function TechStacksSection() {
           })}
         </svg>
 
-        {/* SVG Lines - Mobile (Hidden) */}
-
         {/* Tech Stack Icons - Desktop */}
         {TECH_STACKS.map((stack, index) => {
           const pos = desktopPositions[index];
@@ -97,7 +93,6 @@ export default function TechStacksSection() {
               style={{
                 left: `calc(50% + ${pos.x}px - ${ICON_SIZE_DESKTOP / 2}px)`,
                 top: `calc(50% + ${pos.y}px - ${ICON_SIZE_DESKTOP / 2}px)`,
-
               }}
             >
               <div
@@ -116,13 +111,12 @@ export default function TechStacksSection() {
           );
         })}
 
-        {/* Tech Stack Icons - Mobile (Hidden) */}
-
         {/* Center Content */}
         <div className="relative z-20 px-4 text-center">
           <h2 className="text-4xl font-bold md:text-6xl">TECH STACKS</h2>
           <p className="mt-4 text-base md:text-lg text-muted-foreground w-64 md:w-128 mx-auto">
-            Projek-projek dibangun menggunakan stacks dan teknologi yang stable dan terbaru
+            Projek-projek dibangun menggunakan stacks dan teknologi yang stable
+            dan terbaru
           </p>
         </div>
       </div>
