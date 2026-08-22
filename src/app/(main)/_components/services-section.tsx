@@ -76,10 +76,10 @@ export default function ServicesSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="uppercase tracking-wider text-sm sm:text-base">
+          <div className="uppercase tracking-wider text-sm sm:text-base text-primary">
             our services
           </div>
-          <div className="mb-1 text-2xl md:text-4xl font-bold uppercase">
+          <div className="mb-1 text-2xl md:text-4xl font-bold uppercase text-primary">
             Satu tempat beragam solusi
           </div>
           <div className="text-lg md:text-xl">

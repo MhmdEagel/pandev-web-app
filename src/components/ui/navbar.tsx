@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { MenuIcon, ZapIcon } from "lucide-react"
+import Image from "next/image"
 
 const NAV_ITEMS = [
   { href: "/portofolio", label: "Portofolio" },
@@ -35,8 +36,8 @@ export default function Navbar() {
           className="flex items-center gap-2 font-heading text-lg font-semibold tracking-tight"
           aria-label="PanDev - Beranda"
         >
-          <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <ZapIcon className="size-4" aria-hidden="true" />
+          <span className="inline-flex size-6 items-center justify-center rounded-md text-primary-foreground">
+            <Image src={"/assets/logo.png"} width={50} height={50} alt="PanDev Logo" />
           </span>
           PANDEV
         </Link>
@@ -53,7 +54,7 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className="relative rounded-md px-3 py-2 text-sm font-medium text-foreground"
+                className={cn("relative rounded-md px-3 py-2 text-sm font-medium ", active ? "text-primary" : "text-foreground")}
             
               >
                 {item.label}

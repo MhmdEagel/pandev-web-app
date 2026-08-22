@@ -15,7 +15,7 @@ export default function InfiniteScrollMarquee() {
           </span>
           <span
             className={cn(
-              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8",
+              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8 text-primary",
             )}
           >
             Mobile Application
@@ -33,7 +33,7 @@ export default function InfiniteScrollMarquee() {
         <Marquee pauseOnHover={false}>
           <span
             className={cn(
-              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8",
+              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8 text-primary",
             )}
           >
             Cyber Security
@@ -48,7 +48,7 @@ export default function InfiniteScrollMarquee() {
           </span>
           <span
             className={cn(
-              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8",
+              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8 text-primary",
             )}
           >
             Web Pentest Tools
@@ -66,7 +66,7 @@ export default function InfiniteScrollMarquee() {
           </span>
           <span
             className={cn(
-              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8",
+              "shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl mx-8 text-primary",
             )}
           >
             Video & Photo Editing

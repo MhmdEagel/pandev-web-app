@@ -12,7 +12,7 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold">PANDEV</h1>
+        <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-primary">PANDEV</h1>
         <div className="text-lg md:text-2xl lg:text-4xl mt-1">
           Unlock What&apos;s Possible
         </div>

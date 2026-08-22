@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import TeamSection from "./_components/team-section";
+import Image from "next/image";
+import CtaSection from "../_components/cta-section";
 
 export const metadata: Metadata = {
   title: "Tentang",
@@ -8,15 +11,28 @@ export const metadata: Metadata = {
 
 export default function TentangPage() {
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-        Tentang Kami
-      </h1>
-      <p className="mt-4 max-w-2xl text-muted-foreground">
-        Arkana adalah software house di Indonesia yang menawarkan solusi aplikasi
-        untuk bisnis dan individu. Kami membantu mewujudkan ide menjadi produk
-        digital yang bermanfaat dan berkelanjutan.
-      </p>
+    <main className="flex w-full flex-1 flex-col pt-16">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+        <Image
+          width={300}
+          height={300}
+          alt="PanDev Logo"
+          src={"/assets/logo.png"}
+        />
+        <div className="max-w-xl">
+          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-3xl uppercase text-primary">
+            Taking your ideas to next level
+          </h1>
+          <p className="mt-4 text-balance">
+            PanDev adalah digital agency di Indonesia yang menawarkan solusi
+            aplikasi untuk bisnis dan individu. Kami membantu mewujudkan ide
+            menjadi produk digital yang bermanfaat dan berkelanjutan. Serta
+            beragam produk digital lainnya untuk memenuhi kebutuhan Anda
+          </p>
+        </div>
+      </div>
+      <TeamSection />
+      <CtaSection />
     </main>
   );
 }

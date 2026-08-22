@@ -13,7 +13,6 @@ export default function Home() {
         <TechStacksSection />
         <CtaSection />
       </main>
-      <Footer />
     </div>
   );
 }

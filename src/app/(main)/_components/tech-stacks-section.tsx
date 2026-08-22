@@ -113,8 +113,8 @@ export default function TechStacksSection() {
 
         {/* Center Content */}
         <div className="relative z-20 px-4 text-center">
-          <h2 className="text-4xl font-bold md:text-6xl">TECH STACKS</h2>
-          <p className="mt-4 text-base md:text-lg text-muted-foreground w-64 md:w-128 mx-auto">
+          <h2 className="text-4xl font-bold md:text-6xl text-primary">TECH STACKS</h2>
+          <p className="mt-4 text-base md:text-lg w-64 md:w-128 mx-auto">
             Projek-projek dibangun menggunakan stacks dan teknologi yang stable
             dan terbaru
           </p>
