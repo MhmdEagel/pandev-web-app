@@ -15,27 +15,27 @@ const FEATURED_PROJECTS = [
   {
     id: 1,
     title: "Proyek Web Application",
-    image: "/assets/hero-image.svg",
+    image: "/assets/common/hero-image.svg",
   },
   {
     id: 2,
     title: "Proyek Mobile App",
-    image: "/assets/hero-image.svg",
+    image: "/assets/common/hero-image.svg",
   },
   {
     id: 3,
     title: "Proyek IoT",
-    image: "/assets/hero-image.svg",
+    image: "/assets/common/hero-image.svg",
   },
   {
     id: 4,
     title: "Proyek Data Analytics",
-    image: "/assets/hero-image.svg",
+    image: "/assets/common/hero-image.svg",
   },
   {
     id: 5,
     title: "Proyek Cyber Security",
-    image: "/assets/hero-image.svg",
+    image: "/assets/common/hero-image.svg",
   },
 ];
 
@@ -43,30 +43,30 @@ export default function PortofolioPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 space-y-4">
-        <section className="flex w-full flex-1 flex-col py-16 items-center">
-          <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl uppercase text-center text-primary">
+        <section className="flex flex-col items-center flex-1 w-full py-16">
+          <h1 className="text-3xl font-bold tracking-tight text-center uppercase font-heading sm:text-4xl text-primary">
             Project showcase
           </h1>
           <Carousel />
-          <p className="mt-4 text-muted-foreground text-center text-base lg:text-xl max-w-4xl">
+          <p className="max-w-4xl mt-4 text-base text-center text-muted-foreground lg:text-xl">
             Kumpulan proyek aplikasi dalam bentuk website, mobile, dan desktop
             serta design yang telah kami kerjakan dan bangun
           </p>
-          <Button className="mt-4 h-14 rounded-2xl px-4">
+          <Button className="px-4 mt-4 h-14 rounded-2xl">
             Lihat Selengkapnya <MoveUpRightIcon />
           </Button>
         </section>
 
         <section className="px-4 space-y-8">
-          <div className="text-4xl text-primary font-bold">
-            FEATURED PROJECTS
+          <div className="text-4xl font-bold uppercase text-primary">
+            Recent Project
           </div>
           
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {FEATURED_PROJECTS.slice(0, 2).map((project) => (
               <div
                 key={project.id}
-                className="group relative aspect-video overflow-hidden rounded-xl bg-muted"
+                className="relative overflow-hidden group aspect-video rounded-xl bg-muted"
               >
                 <Image
                   src={project.image}
@@ -74,8 +74,8 @@ export default function PortofolioPage() {
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="absolute bottom-0 left-0 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/60 to-transparent group-hover:opacity-100" />
+                <div className="absolute bottom-0 left-0 p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                   <h3 className="text-lg font-semibold text-white">
                     {project.title}
                   </h3>
@@ -88,7 +88,7 @@ export default function PortofolioPage() {
             {FEATURED_PROJECTS.slice(2).map((project) => (
               <div
                 key={project.id}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-muted"
+                className="relative overflow-hidden group aspect-square rounded-xl bg-muted"
               >
                 <Image
                   src={project.image}
@@ -96,8 +96,8 @@ export default function PortofolioPage() {
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="absolute bottom-0 left-0 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/60 to-transparent group-hover:opacity-100" />
+                <div className="absolute bottom-0 left-0 p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                   <h3 className="text-lg font-semibold text-white">
                     {project.title}
                   </h3>

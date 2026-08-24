@@ -37,7 +37,7 @@ export default function Navbar() {
           aria-label="PanDev - Beranda"
         >
           <span className="inline-flex size-6 items-center justify-center rounded-md text-primary-foreground">
-            <Image src={"/assets/logo.png"} width={50} height={50} alt="PanDev Logo" />
+            <Image src={"/assets/common/logo.png"} width={50} height={50} alt="PanDev Logo" />
           </span>
           PANDEV
         </Link>

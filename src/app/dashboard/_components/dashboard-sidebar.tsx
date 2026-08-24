@@ -18,6 +18,7 @@ import { DASHBOARD_SIDEBAR_ITEMS } from "../_constants/sidebar-items";
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
+  const activePath = "/" + pathname.split("/").filter(Boolean).slice(0, 2).join("/");
 
   return (
     <Sidebar collapsible="icon">
@@ -46,8 +47,9 @@ export default function DashboardSidebar() {
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === item.href}
+                    isActive={activePath === item.href}
                     tooltip={item.title}
+                    className="h-12 rounded-lg data-active:bg-primary data-active:hover:bg-primary/90 data-active:text-white data-active:hover:text-white"
                   >
                     <Link href={item.href}>
                       <item.icon />
@@ -70,5 +72,5 @@ export default function DashboardSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  );
+);
 }

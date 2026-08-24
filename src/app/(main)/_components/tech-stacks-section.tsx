@@ -37,7 +37,7 @@ export default function TechStacksSection() {
     <section
       id="tech-stacks-section"
       className="relative flex items-center justify-center w-full min-h-[600px] py-24 bg-center bg-no-repeat bg-cover"
-      style={{ backgroundImage: "url('/assets/tech-stacks-background.jpg')" }}
+      style={{ backgroundImage: "url('/assets/common/tech-stacks-background.jpg')" }}
     >
       <div className="relative flex items-center justify-center">
         {/* SVG Lines - Desktop */}

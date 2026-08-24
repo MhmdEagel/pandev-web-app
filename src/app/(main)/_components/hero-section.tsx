@@ -31,7 +31,7 @@ export default function HeroSection() {
             className="mx-auto w-auto h-auto"
             width={800}
             height={600}
-            src={"/assets/hero-image.svg"}
+            src={"/assets/common/hero-image.svg"}
             alt="Hero Image"
           />
           <div className="md:block hidden">

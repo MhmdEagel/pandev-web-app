@@ -1,0 +1,274 @@
+"use client";
+
+import { createPortfolio } from "@/app/actions/portfolio";
+import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+import ThumbnailDropzone from "./thumbnail-dropzone";
+import GaleryDropzone from "./galery-dropzone";
+import { useState } from "react";
+import { PORTFOLIO_CATEGORIES } from "../_constants/categories";
+
+const formSchema = z.object({
+  thumbnail: z.file("Thumbnail wajib diupload").min(1),
+  name: z.string().min(1, "Nama wajib diisi"),
+  status: z.string().min(1, "Status wajib diisi"),
+  category: z.string().min(1, "Kategori wajib diisi"),
+  description: z.string().min(1, "Deskripsi wajib diisi"),
+  demo_link: z.string().optional(),
+  repository_link: z.string().min(1, "Link Repository wajib diisi"),
+  galery: z.array(z.file()).optional(),
+});
+
+export default function CreatePortfolio() {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      thumbnail: undefined as unknown as File,
+      name: "",
+      category: "",
+      description: "",
+      demo_link: "",
+      repository_link: "",
+      galery: [] as File[],
+    },
+  });
+
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createPortfolio,
+    onSuccess: (result) => {
+      if (result.success) {
+        toast.success("Portofolio berhasil dibuat");
+        setThumbnailPreview(null);
+        setGalleryPreviews([]);
+        form.reset();
+      } else {
+        toast.error(result.error || "Gagal membuat portofolio");
+      }
+    },
+    onError: (error) => {
+      toast.error(`Gagal membuat portofolio: ${error.message}`);
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    mutate(data);
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <form onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
+          <Tabs defaultValue="informasi">
+            <TabsList className="h-9! px-1 mb-4" variant={"default"}>
+              <TabsTrigger className="p-4" value="informasi">
+                Informasi
+              </TabsTrigger>
+              <TabsTrigger className="p-4" value="media">
+                Media
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="informasi">
+              <div className="flex flex-col gap-4">
+                <Controller
+                  control={form.control}
+                  name="thumbnail"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel>Thumbnail</FieldLabel>
+                      <ThumbnailDropzone
+                        isinvalid={`${fieldState.invalid}`}
+                        value={field.value}
+                        thumbnailPreview={thumbnailPreview}
+                        setThumbailPreview={setThumbnailPreview}
+                        onChange={field.onChange}
+                      />
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="name"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="name-form">Nama</FieldLabel>
+                      <Input
+                        {...field}
+                        id="name"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Nama projek..."
+                      />
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="description"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="description-form">
+                        Deskripsi
+                      </FieldLabel>
+                      <Textarea
+                        {...field}
+                        id="description-form"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Deskripsi..."
+                      />
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="status"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="status-form">Status</FieldLabel>
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger aria-invalid={fieldState.invalid}>
+                          <SelectValue
+                            id="status-form"
+                            placeholder="Pilih status"
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="Draft">Draft</SelectItem>
+                            <SelectItem value="Publish">
+                              Publish
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="category"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="category-form">Kategori</FieldLabel>
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger aria-invalid={fieldState.invalid}>
+                          <SelectValue
+                            id="category-form"
+                            placeholder="Pilih kategori"
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {PORTFOLIO_CATEGORIES.map((category) => (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="demo_link"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="demo-link-form">
+                        Link Demo
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="demo-link-form"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Link demo..."
+                      />
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="repository_link"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel htmlFor="repo-link-form">
+                        Link Repository
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="repo-link-form"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Link repository..."
+                      />
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="media">
+              <div>
+                <Controller
+                  control={form.control}
+                  name="galery"
+                  render={({ field, fieldState }) => (
+                    <Field>
+                      <FieldLabel>Galeri</FieldLabel>
+                      <GaleryDropzone
+                        onChange={field.onChange}
+                        value={field.value || []}
+                        galleryPreviews={galleryPreviews}
+                        setGalleryPreviews={setGalleryPreviews}
+                      />
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </Field>
+                  )}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+          <Button
+            type="submit"
+            className="w-full h-10 mt-4"
+            disabled={isPending}
+          >
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <Spinner size="sm" />
+                Menyimpan...
+              </div>
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

@@ -2,47 +2,62 @@ import Image from "next/image";
 
 const TEAM_MEMBERS = [
   {
-    name: "Nama Anggota 1",
-    role: "Frontend Developer",
-    image: "/assets/profile-placeholder.png",
+    name: "Ilham",
+    role: "Developer",
+    image: "/assets/profiles/ilham.png",
   },
   {
-    name: "Nama Anggota 2",
-    role: "Backend Developer",
-    image: "/assets/profile-placeholder.png",
+    name: "Yoga",
+    role: "Developer",
+    image: "/assets/profiles/yoga.png",
   },
   {
-    name: "Nama Anggota 3",
-    role: "UI/UX Designer",
-    image: "/assets/profile-placeholder.png",
+    name: "Farjihan",
+    role: "Developer",
+    image: "/assets/profiles/farjihan.png",
   },
   {
-    name: "Nama Anggota 4",
-    role: "Project Manager",
-    image: "/assets/profile-placeholder.png",
+    name: "Tahta",
+    role: "Developer",
+    image: "/assets/profiles/tahta.png",
+  },
+  {
+    name: "Eagel",
+    role: "Developer",
+    image: "/assets/profiles/eagel.png",
+  },
+  {
+    name: "Diva",
+    role: "Designer",
+    image: "/assets/profiles/diva.png",
+  },
+  {
+    name: "Masyitah",
+    role: "Designer",
+    image: "/assets/profiles/masyitah.png",
   },
 ];
 
 export default function TeamSection() {
   return (
-    <section className="py-16 max-w-4xl mx-auto">
+    <section className="py-16 max-w-4xl mx-auto mt-16">
       <div className="text-center mb-10">
         <h2 className="text-3xl font-bold sm:text-4xl uppercase text-primary">Meet Our Team</h2>
         <p className="mt-2 text-muted-foreground">
           Tim profesional yang berpengalaman di bidangnya
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+      <div className="grid grid-cols-2 md:flex flex-wrap px-4 justify-center gap-6">
         {TEAM_MEMBERS.map((member) => (
           <div key={member.name} className="flex flex-col items-center text-center">
             <div className="relative mb-4">
               <div className="absolute inset-0 rounded-full bg-primary" />
               <Image
-                src={"/assets/profile-placeholder.png"}
+                src={member.image}
                 alt={member.name}
-                width={160}
+                width={"160"}
                 height={160}
-                className="relative rounded-full object-cover"
+                className="relative rounded-full object-cover w-auto h-auto"
               />
             </div>
             <h3 className="font-semibold">{member.name}</h3>

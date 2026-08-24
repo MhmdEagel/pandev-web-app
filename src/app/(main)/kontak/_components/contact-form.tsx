@@ -9,7 +9,7 @@ export default function ContactForm() {
     <section className="relative min-h-screen flex items-center justify-center py-16">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/assets/contact-bg.png')" }}
+        style={{ backgroundImage: "url('/assets/common/contact-bg.png')" }}
       />
       <div className="absolute inset-0 bg-black/80" />
 

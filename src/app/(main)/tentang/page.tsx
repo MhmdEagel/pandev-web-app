@@ -17,7 +17,7 @@ export default function TentangPage() {
           width={300}
           height={300}
           alt="PanDev Logo"
-          src={"/assets/logo.png"}
+          src={"/assets/common/logo.png"}
         />
         <div className="max-w-xl">
           <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-3xl uppercase text-primary">

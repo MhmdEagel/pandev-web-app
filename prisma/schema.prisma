@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Portfolio {
+  id              String          @id @default(uuid())
+  thumbnail       String
+  name            String
+  category        String
+  description     String
+  demo_link       String?
+  repository_link String
+  status          String          @default("draft")
+  galery          PortfolioGalery[]
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+}
+
+model PortfolioGalery {
+  id           String    @id @default(uuid())
+  portfolio_id String
+  image_url    String
+  created_at   DateTime  @default(now())
+  portfolio    Portfolio @relation(fields: [portfolio_id], references: [id], onDelete: Cascade)
+
+  @@index([portfolio_id])
+}
