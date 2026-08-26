@@ -19,6 +19,7 @@ model Portfolio {
   demo_link       String?
   repository_link String
   status          String          @default("draft")
+  tech_stacks     Json            @default("[]")
   galery          PortfolioGalery[]
   created_at      DateTime        @default(now())
   updated_at      DateTime        @updatedAt

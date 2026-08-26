@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import z from "zod";
 import ThumbnailDropzone from "./thumbnail-dropzone";
 import GaleryDropzone from "./galery-dropzone";
+import TechStackSelect from "./tech-stack-select";
 import { useState } from "react";
 import { PORTFOLIO_CATEGORIES } from "../_constants/categories";
 
@@ -47,12 +48,14 @@ export default function CreatePortfolio() {
       description: "",
       demo_link: "",
       repository_link: "",
+      status: "",
       galery: [] as File[],
     },
   });
 
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [techStacks, setTechStacks] = useState<string[]>([]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: createPortfolio,
@@ -61,6 +64,7 @@ export default function CreatePortfolio() {
         toast.success("Portofolio berhasil dibuat");
         setThumbnailPreview(null);
         setGalleryPreviews([]);
+        setTechStacks([]);
         form.reset();
       } else {
         toast.error(result.error || "Gagal membuat portofolio");
@@ -72,13 +76,18 @@ export default function CreatePortfolio() {
   });
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    mutate(data);
+    mutate({ ...data, tech_stacks: techStacks });
   };
 
   return (
     <Card>
       <CardContent>
-        <form onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
+        <form
+          onSubmit={(e) => form.handleSubmit(onSubmit)(e)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.preventDefault();
+          }}
+        >
           <Tabs defaultValue="informasi">
             <TabsList className="h-9! px-1 mb-4" variant={"default"}>
               <TabsTrigger className="p-4" value="informasi">
@@ -230,6 +239,10 @@ export default function CreatePortfolio() {
                     </Field>
                   )}
                 />
+                <Field>
+                  <FieldLabel>Tech Stacks</FieldLabel>
+                  <TechStackSelect value={techStacks} onChange={setTechStacks} />
+                </Field>
               </div>
             </TabsContent>
             <TabsContent value="media">

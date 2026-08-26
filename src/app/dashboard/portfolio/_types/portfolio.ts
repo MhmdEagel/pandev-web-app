@@ -7,6 +7,7 @@ export interface Portfolio {
   demo_link: string | null;
   repository_link: string;
   status: string;
+  tech_stacks?: string[] | unknown;
   created_at: Date;
   updated_at: Date;
   galery?: {

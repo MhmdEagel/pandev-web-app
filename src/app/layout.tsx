@@ -20,9 +20,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "PanDev | Software House",
+  title: "PanDev | Jasa IT Profesional",
   description:
-    "Arkana adalah software house di Indonesia yang menawarkan solusi aplikasi maupun kebutuhan digital lainnya.",
+    "PanDev adalah penyedia jasa IT profesional di Indonesia yang menawarkan solusi aplikasi maupun kebutuhan digital lainnya.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

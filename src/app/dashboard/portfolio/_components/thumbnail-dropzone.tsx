@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { UploadIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, DragEvent, SetStateAction, useRef, useState } from "react";
+import { toast } from "sonner";
 
 interface PropTypes {
   onChange: (value: File) => void;
@@ -56,7 +57,7 @@ export default function ThumbnailDropzone(props: PropTypes) {
       className={cn(
         "flex border-2 border-dotted cursor-pointer border-black/30 min-h-60 text-muted-foreground",
         isinvalid === "true" && "border-destructive",
-        isDragging && "bg-primary/20 scale-[103%]",
+        isDragging && "bg-primary/20 scale-[102%]",
       )}
     >
       <input

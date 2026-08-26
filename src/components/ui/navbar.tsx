@@ -16,7 +16,7 @@ import { MenuIcon, ZapIcon } from "lucide-react"
 import Image from "next/image"
 
 const NAV_ITEMS = [
-  { href: "/portofolio", label: "Portofolio" },
+  { href: "/portfolio", label: "Portofolio" },
   { href: "/tentang", label: "Tentang" },
   { href: "/kontak", label: "Kontak" },
 ] as const

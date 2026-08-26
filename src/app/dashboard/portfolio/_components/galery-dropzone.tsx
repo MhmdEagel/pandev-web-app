@@ -55,7 +55,12 @@ export default function GaleryDropzone(props: PropTypes) {
 
   return (
     <div>
-      <div className="flex border-2 border-dotted cursor-pointer border-black/30 min-h-60 text-muted-foreground">
+      <div
+        className={cn(
+          "flex border-2 border-dotted cursor-pointer border-black/30 min-h-60 text-muted-foreground",
+          isDragging && "bg-primary/20 scale-[102%]",
+        )}
+      >
         <input
           ref={dropzoneInputRef}
           className="hidden"
@@ -67,10 +72,7 @@ export default function GaleryDropzone(props: PropTypes) {
           }}
         />
         <div
-          className={cn(
-            "flex flex-col justify-center items-center flex-1 gap-2 border",
-            isDragging && "bg-primary/20 scale-[103%]",
-          )}
+          className="flex flex-col justify-center items-center flex-1 gap-2 border"
           onDragOver={(e) => {
             e.preventDefault();
             setIsDragging(true);
