@@ -22,11 +22,11 @@ import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import ThumbnailDropzone from "./thumbnail-dropzone";
-import GaleryDropzone from "./galery-dropzone";
-import TechStackSelect from "./tech-stack-select";
+import ThumbnailDropzone from "../../_components/thumbnail-dropzone";
+import GaleryDropzone from "../../_components/galery-dropzone";
+import TechStackSelect from "../../_components/tech-stack-select";
 import { useEffect, useRef, useState } from "react";
-import { PORTFOLIO_CATEGORIES } from "../_constants/categories";
+import { PORTFOLIO_CATEGORIES } from "../../_constants/categories";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -40,7 +40,7 @@ const formSchema = z.object({
   galery: z.array(z.string()).optional(),
 });
 
-export default function CreatePortfolio() {
+export default function CreatePortfolioForm() {
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),

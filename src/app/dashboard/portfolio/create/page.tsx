@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import CreatePortfolio from "../_components/create-portfolio";
+import CreatePortfolioForm from "./_components/create-portfolio-form";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export default function CreatePortfolioPage() {
       </CardHeader>
       <CardContent>
         <div>
-          <CreatePortfolio />
+          <CreatePortfolioForm />
         </div>
       </CardContent>
     </Card>

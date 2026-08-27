@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "Lihat proyek dan karya terbaik yang telah dikerjakan oleh PanDev.",
 };
 
+import Link from "next/link";
+
 const FEATURED_PROJECTS = [
   {
     id: 1,
@@ -52,8 +54,10 @@ export default function PortofolioPage() {
             Kumpulan proyek aplikasi dalam bentuk website, mobile, dan desktop
             serta design yang telah kami kerjakan dan bangun
           </p>
-          <Button className="px-4 mt-4 h-14 rounded-2xl">
-            Lihat Selengkapnya <MoveUpRightIcon />
+          <Button className="px-4 mt-4 h-14 rounded-2xl" asChild>
+            <Link href="/portfolio/list">
+              Lihat Selengkapnya <MoveUpRightIcon />
+            </Link>
           </Button>
         </section>
 

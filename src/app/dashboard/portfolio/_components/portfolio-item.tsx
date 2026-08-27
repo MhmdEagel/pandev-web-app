@@ -88,11 +88,11 @@ export default function PortfolioItem(props: PropTypes) {
     <>
       <Card className="hover:scale-[102%] transition-all">
         <CardHeader>
-          <div className="object-cover aspect-video">
+          <div>
             <Image
-              className="w-full rounded-tl-lg rounded-tr-lg"
+              className="w-full rounded-tl-lg rounded-tr-lg object-cover aspect-video"
               src={thumbnail}
-              width={300}
+              width={200}
               height={300}
               alt={name}
             />
@@ -109,13 +109,15 @@ export default function PortfolioItem(props: PropTypes) {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-fit">
-                  <Button
-                    className="flex justify-start gap-1"
-                    type="button"
-                    variant={"ghost"}
-                  >
-                    <PenIcon className="size-4" /> Edit
-                  </Button>
+                  <Link href={`/dashboard/portfolio/edit/${id}`}>
+                    <Button
+                      className="flex justify-start gap-1"
+                      type="button"
+                      variant={"ghost"}
+                    >
+                      <PenIcon className="size-4" /> Edit
+                    </Button>
+                  </Link>
                   <Link href={`/portfolio/${id}`} target="_blank">
                     <Button
                       className="flex justify-start gap-1"

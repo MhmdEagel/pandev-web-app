@@ -75,7 +75,7 @@ export async function getPortfolios() {
 }
 
 interface CreatePortfolioInput {
-  thumbnail: File;
+  thumbnail: string;
   name: string;
   category: string;
   description: string;
@@ -83,35 +83,14 @@ interface CreatePortfolioInput {
   repository_link: string;
   status?: string;
   tech_stacks?: string[];
-  galery?: File[];
+  galery?: string[];
 }
 
 export async function createPortfolio(data: CreatePortfolioInput) {
   try {
-    const thumbnailFormData = new FormData();
-    thumbnailFormData.append("file", data.thumbnail);
-    const thumbnailResult = await uploadFile(thumbnailFormData);
-
-    if (!thumbnailResult.success) {
-      return { success: false, error: "Gagal upload thumbnail" };
-    }
-
-    let galleryUrls: string[] = [];
-    if (data.galery && data.galery.length > 0) {
-      const galeryFormData = new FormData();
-      data.galery.forEach((file) => {
-        galeryFormData.append("files", file);
-      });
-      const galeryResult = await uploadMultipleFiles(galeryFormData);
-
-      if (galeryResult.uploaded) {
-        galleryUrls = galeryResult.uploaded.map((item) => item.url);
-      }
-    }
-
     const portfolio = await prisma.portfolio.create({
       data: {
-        thumbnail: thumbnailResult.url!,
+        thumbnail: data.thumbnail,
         name: data.name,
         category: data.category,
         description: data.description,
@@ -120,7 +99,7 @@ export async function createPortfolio(data: CreatePortfolioInput) {
         status: data.status || "draft",
         tech_stacks: data.tech_stacks || [],
         galery: {
-          create: galleryUrls.map((url) => ({
+          create: (data.galery || []).map((url) => ({
             image_url: url,
           })),
         },
@@ -134,5 +113,77 @@ export async function createPortfolio(data: CreatePortfolioInput) {
   } catch (error) {
     console.error("Error creating portfolio:", error);
     return { success: false, error: "Gagal membuat portofolio" };
+  }
+}
+
+interface UpdatePortfolioInput {
+  uuid: string;
+  thumbnail: string;
+  name: string;
+  category: string;
+  description: string;
+  demo_link?: string;
+  repository_link: string;
+  status?: string;
+  tech_stacks?: string[];
+  galery?: string[];
+}
+
+export async function updatePortfolio(data: UpdatePortfolioInput) {
+  try {
+    const existing = await prisma.portfolio.findUnique({
+      where: { id: data.uuid },
+      include: { galery: true },
+    });
+
+    if (!existing) {
+      return { success: false, error: "Portofolio tidak ditemukan" };
+    }
+
+    if (data.thumbnail !== existing.thumbnail) {
+      const oldFile = existing.thumbnail.replace("/uploads/", "");
+      await deleteMultipleFiles([oldFile]);
+    }
+
+    const existingGalleryUrls = existing.galery.map((g) => g.image_url);
+    const removedGalleryUrls = existingGalleryUrls.filter(
+      (url) => !(data.galery || []).includes(url),
+    );
+
+    if (removedGalleryUrls.length > 0) {
+      const filesToDelete = removedGalleryUrls.map((url) =>
+        url.replace("/uploads/", ""),
+      );
+      await deleteMultipleFiles(filesToDelete);
+    }
+
+    await prisma.portfolioGalery.deleteMany({
+      where: { portfolio_id: data.uuid },
+    });
+
+    const portfolio = await prisma.portfolio.update({
+      where: { id: data.uuid },
+      data: {
+        thumbnail: data.thumbnail,
+        name: data.name,
+        category: data.category,
+        description: data.description,
+        demo_link: data.demo_link || null,
+        repository_link: data.repository_link,
+        status: data.status || "draft",
+        tech_stacks: data.tech_stacks || [],
+        galery: {
+          create: (data.galery || []).map((url) => ({
+            image_url: url,
+          })),
+        },
+      },
+      include: { galery: true },
+    });
+
+    return { success: true, data: portfolio };
+  } catch (error) {
+    console.error("Error updating portfolio:", error);
+    return { success: false, error: "Gagal mengupdate portofolio" };
   }
 }

@@ -14,11 +14,16 @@ import {
 } from "@/components/ui/sheet";
 import { Toggle } from "@/components/ui/toggle";
 import { FilterIcon } from "lucide-react";
-import { PORTFOLIO_CATEGORIES } from "../_constants/categories";
 
-const STATUS_OPTIONS = [
-  { value: "published", label: "Published" },
-  { value: "draft", label: "Draft" },
+const PORTFOLIO_CATEGORIES = [
+  "Web App",
+  "Mobile App",
+  "Desktop App",
+  "Multiplatform App",
+  "Cyber Security Tools",
+  "Design & Multimedia",
+  "IoT Solutions",
+  "Data & GIS",
 ] as const;
 
 export default function FilterPortfolio() {
@@ -26,24 +31,16 @@ export default function FilterPortfolio() {
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
 
-  const [draftStatus, setDraftStatus] = useState<string>("");
   const [draftCategories, setDraftCategories] = useState<string[]>([]);
 
-  const currentStatus =
-    searchParams.get("status")?.split(",").filter(Boolean)[0] || "";
   const currentCategories =
     searchParams.get("category")?.split(",").filter(Boolean) || [];
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
-      setDraftStatus(currentStatus);
       setDraftCategories([...currentCategories]);
     }
     setOpen(nextOpen);
-  };
-
-  const handleStatusChange = (status: string) => {
-    setDraftStatus((prev) => (prev === status ? "" : status));
   };
 
   const toggleDraftCategory = (category: string) => {
@@ -57,12 +54,6 @@ export default function FilterPortfolio() {
   const handleApply = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (draftStatus) {
-      params.set("status", draftStatus);
-    } else {
-      params.delete("status");
-    }
-
     if (draftCategories.length > 0) {
       params.set("category", draftCategories.join(","));
     } else {
@@ -74,8 +65,7 @@ export default function FilterPortfolio() {
     setOpen(false);
   };
 
-  const hasActiveFilters =
-    !!currentStatus || currentCategories.length > 0;
+  const hasActiveFilters = currentCategories.length > 0;
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
@@ -84,7 +74,7 @@ export default function FilterPortfolio() {
           <FilterIcon className="size-4" /> Filter
           {hasActiveFilters && (
             <span className="ml-1 size-5 rounded-full bg-primary-foreground text-primary text-xs flex items-center justify-center">
-              {(currentStatus ? 1 : 0) + currentCategories.length}
+              {currentCategories.length}
             </span>
           )}
         </Button>
@@ -95,29 +85,10 @@ export default function FilterPortfolio() {
             Filter Portfolio
           </SheetTitle>
           <SheetDescription>
-            Pilih item-item di bawah ini untuk mengfilter portfolio Anda.
+            Pilih kategori untuk mengfilter portfolio.
           </SheetDescription>
         </SheetHeader>
         <div className="space-y-6 p-4">
-          {/* Status Filter */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium">Status</h3>
-            <div className="flex flex-wrap gap-2">
-              {STATUS_OPTIONS.map((status) => (
-                <Toggle
-                  key={status.value}
-                  variant="outline"
-                  size="sm"
-                  pressed={draftStatus === status.value}
-                  onPressedChange={() => handleStatusChange(status.value)}
-                >
-                  {status.label}
-                </Toggle>
-              ))}
-            </div>
-          </div>
-
-          {/* Category Filter */}
           <div className="space-y-3">
             <h3 className="text-sm font-medium">Kategori</h3>
             <div className="flex flex-wrap gap-2">

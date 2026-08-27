@@ -1,56 +1,71 @@
 "use client";
 
+import { uploadFile, deleteFile } from "@/app/actions/upload";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { UploadIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, DragEvent, SetStateAction, useRef, useState } from "react";
+import { DragEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface PropTypes {
-  onChange: (value: File) => void;
-  value: File | undefined;
+  value: string;
+  onChange: (url: string) => void;
   isinvalid: string;
-  thumbnailPreview: string | null;
-  setThumbailPreview: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function ThumbnailDropzone(props: PropTypes) {
-  const { onChange, value, isinvalid, thumbnailPreview, setThumbailPreview } =
-    props;
+  const { onChange, value, isinvalid } = props;
   const dropzoneInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  const handleThumbnailChange = (selectedFile: File | null) => {
-    if (!selectedFile) return;
-    if (selectedFile.size > MAX_FILE_SIZE) {
+  const handleUpload = async (file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
       toast.error("Ukuran file maksimal 5MB");
       return;
     }
-    const previewUrl = URL.createObjectURL(selectedFile);
-    setThumbailPreview(previewUrl);
-    onChange(selectedFile);
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const result = await uploadFile(formData);
+
+      if (result.success && result.url) {
+        onChange(result.url);
+      } else {
+        toast.error(result.error || "Gagal upload thumbnail");
+      }
+    } catch {
+      toast.error("Gagal upload thumbnail");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const handleDeleteThumbnail = () => {
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview);
-    }
-    setThumbailPreview(null);
-    onChange(undefined as unknown as File);
+  const handleDelete = async () => {
+    if (!value) return;
+
+    const filename = value.replace("/uploads/", "");
+    await deleteFile(filename);
+    onChange("");
+  };
+
+  const handleFileChange = (selectedFile: File | null) => {
+    if (!selectedFile) return;
+    handleUpload(selectedFile);
   };
 
   const handleDropzone = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     setIsDragging(false);
-    if (file) handleThumbnailChange(file);
+    if (file) handleFileChange(file);
   };
-
-  const displaySrc =
-    thumbnailPreview || (value ? URL.createObjectURL(value) : null);
 
   return (
     <div
@@ -67,15 +82,20 @@ export default function ThumbnailDropzone(props: PropTypes) {
         accept="image/*"
         onChange={(e) => {
           const selectedFile = e.target.files?.[0] ?? null;
-          handleThumbnailChange(selectedFile);
+          handleFileChange(selectedFile);
         }}
       />
-      {displaySrc ? (
+      {isUploading ? (
+        <div className="flex flex-col justify-center items-center flex-1 gap-2">
+          <Spinner />
+          <div>Mengupload...</div>
+        </div>
+      ) : value ? (
         <div className="relative m-4 mx-auto">
           <Image
             width={500}
             height={300}
-            src={displaySrc}
+            src={value}
             alt="thumbnail image"
             className="object-cover aspect-video"
           />
@@ -83,7 +103,7 @@ export default function ThumbnailDropzone(props: PropTypes) {
             type="button"
             className="absolute -top-3 -right-3"
             size={"icon-lg"}
-            onClick={handleDeleteThumbnail}
+            onClick={handleDelete}
           >
             <XIcon />
           </Button>

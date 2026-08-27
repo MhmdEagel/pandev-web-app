@@ -1,48 +1,65 @@
 "use client";
 
+import { uploadFile, deleteFile } from "@/app/actions/upload";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { UploadIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { Dispatch, DragEvent, SetStateAction, useRef, useState } from "react";
+import { DragEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface PropTypes {
-  onChange: (value: File[]) => void;
-  value: File[];
-  galleryPreviews: string[];
-  setGalleryPreviews: Dispatch<SetStateAction<string[]>>;
+  value: string[];
+  onChange: (urls: string[]) => void;
 }
 
 const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export default function GaleryDropzone(props: PropTypes) {
-  const { onChange, value = [], galleryPreviews, setGalleryPreviews } = props;
+  const { onChange, value = [] } = props;
 
   const dropzoneInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [uploadingIndexes, setUploadingIndexes] = useState<number[]>([]);
 
-  const handleMediaChange = (selectedFile: File | null) => {
-    if (!selectedFile) return;
-    if (!allowedTypes.includes(selectedFile.type)) {
+  const handleUpload = async (file: File) => {
+    if (!allowedTypes.includes(file.type)) {
       toast.error("Format file harus JPG, PNG, atau WEBP");
       return;
     }
-    if (selectedFile.size > MAX_FILE_SIZE) {
+    if (file.size > MAX_FILE_SIZE) {
       toast.error("Ukuran file maksimal 5MB");
       return;
     }
-    const previewUrl = URL.createObjectURL(selectedFile);
-    setGalleryPreviews((prev) => [...prev, previewUrl]);
-    onChange([...value, selectedFile]);
+
+    const tempIndex = value.length;
+    setUploadingIndexes((prev) => [...prev, tempIndex]);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const result = await uploadFile(formData);
+
+      if (result.success && result.url) {
+        onChange([...value, result.url]);
+      } else {
+        toast.error(result.error || "Gagal upload gambar");
+      }
+    } catch {
+      toast.error("Gagal upload gambar");
+    } finally {
+      setUploadingIndexes((prev) => prev.filter((i) => i !== tempIndex));
+    }
   };
 
-  const handleDeleteMedia = (index: number) => {
-    if (galleryPreviews[index]) {
-      URL.revokeObjectURL(galleryPreviews[index]);
+  const handleDeleteMedia = async (index: number) => {
+    const url = value[index];
+    if (url) {
+      const filename = url.replace("/uploads/", "");
+      await deleteFile(filename);
     }
-    setGalleryPreviews((prev) => prev.filter((_, i) => i !== index));
     onChange(value.filter((_, i) => i !== index));
   };
 
@@ -50,7 +67,7 @@ export default function GaleryDropzone(props: PropTypes) {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     setIsDragging(false);
-    if (file) handleMediaChange(file);
+    if (file) handleUpload(file);
   };
 
   return (
@@ -68,7 +85,7 @@ export default function GaleryDropzone(props: PropTypes) {
           accept="image/*"
           onChange={(e) => {
             const selectedFile = e.target.files?.[0] ?? null;
-            handleMediaChange(selectedFile);
+            if (selectedFile) handleUpload(selectedFile);
           }}
         />
         <div
@@ -94,12 +111,12 @@ export default function GaleryDropzone(props: PropTypes) {
         </div>
       </div>
       <div className="grid grid-cols-3 mt-4">
-        {galleryPreviews.map((item, index) => (
-          <div key={item} className="relative">
+        {value.map((url, index) => (
+          <div key={url} className="relative">
             <Image
               width={200}
               height={200}
-              src={item}
+              src={url}
               alt={`gallery image ${index + 1}`}
               className="object-cover aspect-square"
             />
@@ -111,6 +128,14 @@ export default function GaleryDropzone(props: PropTypes) {
             >
               <XIcon />
             </Button>
+          </div>
+        ))}
+        {uploadingIndexes.map((index) => (
+          <div
+            key={`uploading-${index}`}
+            className="relative flex items-center justify-center aspect-square bg-muted"
+          >
+            <Spinner />
           </div>
         ))}
       </div>
