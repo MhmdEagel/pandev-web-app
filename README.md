@@ -1,36 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PanDev Website
 
-## Getting Started
+Website resmi PanDev (software house) yang dibangun dengan Next.js, Prisma ORM, dan shadcn/ui.
 
-First, run the development server:
+## Tech Stack
+
+- **Framework:** Next.js 16.3.1 (App Router, Turbopack)
+- **UI Library:** React 19, shadcn/ui (radix-nova), Tailwind CSS 4
+- **ORM:** Prisma 6.12.0 (MySQL)
+- **State Management:** TanStack React Query
+- **Form Handling:** React Hook Form + Zod
+- **Bahasa:** TypeScript 5
+
+## Prasyarat
+
+- Node.js 20+
+- MySQL (XAMPP / MySQL Server)
+- npm
+
+## Setup Development
+
+### 1. Clone Repository
+
+```bash
+git clone <url-repo>
+cd software-agency
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Setup Environment Variables
+
+Copy file `.env.example` ke `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` sesuai konfigurasi MySQL kamu:
+
+```
+DATABASE_URL="mysql://root:@localhost:3306/pandev_db"
+DATABASE_USER="root"
+DATABASE_PASSWORD=""
+DATABASE_NAME="pandev_db"
+DATABASE_HOST="localhost"
+DATABASE_PORT=3306
+```
+
+### 4. Buat Database
+
+Buat database di MySQL:
+
+```sql
+CREATE DATABASE pandev_db;
+```
+
+### 5. Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+### 6. Jalankan Migrasi
+
+```bash
+npx prisma migrate dev
+```
+
+### 7. Jalankan Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Perintah yang Tersedia
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Perintah | Keterangan |
+|---|---|
+| `npm run dev` | Jalankan dev server |
+| `npm run build` | Build untuk production |
+| `npm run start` | Jalankan production server |
+| `npm run lint` | Jalankan ESLint |
 
-## Learn More
+## Struktur Project
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/
+│   ├── (main)/              # Halaman publik (homepage, portfolio, tentang, kontak)
+│   ├── dashboard/           # Dashboard admin
+│   │   └── portfolio/       # CRUD portfolio
+│   ├── actions/             # Server actions (upload, portfolio)
+│   └── auth/                # Autentikasi
+├── components/
+│   └── ui/                  # Komponen shadcn/ui
+├── hooks/                   # Custom React hooks
+└── lib/                     # Utility functions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Menambah Komponen UI (shadcn)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx shadcn@latest add <nama-komponen>
+```
 
-## Deploy on Vercel
+Contoh:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npx shadcn@latest add dialog
+npx shadcn@latest add table
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Catatan Penting
+
+- Gunakan `@/*` path alias untuk import (maps ke `./src/*`)
+- Komponen page-specific diletakkan di folder `_components/` dalam route yang sama
+- Komponen global/shared di `src/components/ui/`
+- Asset statis di `public/assets/`
+- Upload file menggunakan server actions di `src/app/actions/upload.ts`
