@@ -1,9 +1,7 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { deleteMultipleFiles, uploadFile, uploadMultipleFiles } from "./upload";
-
-const prisma = new PrismaClient();
 
 export async function getPortfolioByUuid(uuid: string) {
   try {

@@ -6,15 +6,16 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { DASHBOARD_SIDEBAR_ITEMS } from "../_constants/sidebar-items";
+import Image from "next/image";
+import { NavUser } from "./nav-user";
+import NavMain from "./nav-main";
+import { SIDEBAR_MAIN_ITEMS, SIDEBAR_SECONDARY_ITEMS } from "../_constants/sidebar-items";
+import { NavSecondary } from "./nav-secondary";
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
@@ -27,8 +28,8 @@ export default function DashboardSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  P
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-primary-foreground">
+                  <Image width={30} height={30} src={"/assets/common/logo.png"} alt="PanDev Logo" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">PanDev</span>
@@ -39,38 +40,12 @@ export default function DashboardSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {DASHBOARD_SIDEBAR_ITEMS.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={activePath === item.href}
-                    tooltip={item.title}
-                    className="h-12 rounded-lg data-active:bg-primary data-active:hover:bg-primary/90 data-active:text-white data-active:hover:text-white"
-                  >
-                    <Link href={item.href}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <NavMain items={SIDEBAR_MAIN_ITEMS} activePath={activePath}  />
+        <NavSecondary items={SIDEBAR_SECONDARY_ITEMS} activePath={activePath} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/">Kembali ke Beranda</Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <NavUser  />
       </SidebarFooter>
     </Sidebar>
-);
+  );
 }

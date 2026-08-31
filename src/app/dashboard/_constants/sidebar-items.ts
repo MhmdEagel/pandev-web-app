@@ -1,10 +1,13 @@
 import {
   LayoutDashboardIcon,
   BriefcaseIcon,
-  TrophyIcon,
+  SettingsIcon,
+  HelpCircleIcon,
+  UsersIcon,
+  LogsIcon,
 } from "lucide-react";
 
-export const DASHBOARD_SIDEBAR_ITEMS = [
+export const SIDEBAR_MAIN_ITEMS = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -15,9 +18,30 @@ export const DASHBOARD_SIDEBAR_ITEMS = [
     href: "/dashboard/portfolio",
     icon: BriefcaseIcon,
   },
+];
+
+export const SIDEBAR_SECONDARY_ITEMS = [
   {
-    title: "Leaderboard",
-    href: "/dashboard/leaderboard",
-    icon: TrophyIcon,
+    title: "Pengaturan",
+    href: "/dashboard/settings",
+    icon: SettingsIcon,
   },
-] as const;
+  {
+    title: "Bantuan",
+    href: "/dashboard/help",
+    icon: HelpCircleIcon,
+  },
+];
+
+export const SIDEBAR_ADMIN_ITEMS = [
+  {
+    title: "User",
+    href: "/dashboard/users",
+    icon: UsersIcon,
+  },
+  {
+    title: "Activity Logs",
+    href: "/dashboard/logs",
+    icon: LogsIcon,  
+  }
+]

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import PortfolioListWrapper from "./_components/portfolio-list-content";
 
 export const metadata: Metadata = {
@@ -7,8 +7,6 @@ export const metadata: Metadata = {
   description:
     "Lihat semua proyek dan karya terbaik yang telah dikerjakan oleh PanDev.",
 };
-
-const prisma = new PrismaClient();
 
 async function getPublishedPortfolios() {
   try {
