@@ -15,7 +15,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-4">
       <DashboardHeader title="Pengaturan" description="Kelola avatar, data diri, dan keamanan akun Anda" />
-      <AvatarForm />
+      <AvatarForm userImageUrl={currentUser?.image} onsuccess={() => session.refetch()} />
       <InformationForm userEmail={currentUser?.email} userFullname={currentUser?.name} onsuccess={() => session.refetch()} />
       <SecurityForm />
     </div>

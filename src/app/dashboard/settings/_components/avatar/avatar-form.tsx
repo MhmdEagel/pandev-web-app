@@ -1,13 +1,57 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { PenIcon, UserIcon } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { deleteFile } from "@/app/actions/upload";
+import { updateUserImage } from "@/app/actions/user";
+import { PenIcon, TrashIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import AvatarDropzoneDialog from "./avatar-dropzone-dialog";
 
-export default function AvatarForm() {
-  const [open, setOpen] = useState(false)
+interface PropTypes {
+  userImageUrl?: string | null;
+  onsuccess?: () => void;
+}
+
+export default function AvatarForm({ userImageUrl, onsuccess }: PropTypes) {
+  const [open, setOpen] = useState(false);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+
+  const handleDelete = async () => {
+    if (!userImageUrl) return;
+
+    const filename = userImageUrl.replace("/uploads/", "");
+    const deleteResult = await deleteFile(filename);
+    if (!deleteResult.success) {
+      toast.error("Gagal menghapus file avatar");
+      return;
+    }
+
+    const updateResult = await updateUserImage(null);
+    if (!updateResult.success) {
+      toast.error(updateResult.error || "Gagal mengupdate avatar");
+      return;
+    }
+
+    toast.success("Avatar berhasil dihapus");
+    onsuccess?.();
+  };
+
+  const handleEditClick = () => {
+    setOpen(true);
+  };
+
   return (
     <>
       <div className="py-4 px-8 mx-4 border-b flex items-center">
@@ -17,17 +61,62 @@ export default function AvatarForm() {
         </div>
         <div className="w-full">
           <div className="relative w-fit">
-            <Avatar className="size-18">
+            <Avatar className="size-24">
+              {userImageUrl && <AvatarImage src={userImageUrl} alt="avatar" />}
               <AvatarFallback>
                 <UserIcon className="size-10" />
               </AvatarFallback>
             </Avatar>
-            <Button onClick={() => { setOpen(true) }} variant={"outline"} className="rounded-full absolute top-0.5 -right-4" size={"icon"}><PenIcon className="size-4" /></Button>
-            {/* <Button variant={"destructive"} className="rounded-full absolute -bottom-0.5 -right-4" size={"icon"}><TrashIcon className="size-4" /></Button> */}
+            <Button
+              onClick={handleEditClick}
+              variant="outline"
+              className="rounded-full absolute top-0.5 -right-4"
+              size="icon"
+            >
+              <PenIcon className="size-4" />
+            </Button>
+            {userImageUrl && (
+              <Button
+                onClick={() => setDeleteAlertOpen(true)}
+                variant="outline"
+                className="rounded-full absolute -bottom-0.5 -right-4 text-destructive hover:text-destructive"
+                size="icon"
+              >
+                <TrashIcon className="size-4" />
+              </Button>
+            )}
           </div>
         </div>
       </div>
-      <AvatarDropzoneDialog open={open} setOpen={setOpen} isinvalid="" onChange={(url: string) => { }} value="" />
+
+      <AlertDialog open={deleteAlertOpen} onOpenChange={setDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus Avatar</AlertDialogTitle>
+            <AlertDialogDescription>
+              Apakah Anda yakin ingin menghapus avatar? Tindakan ini tidak dapat dibatalkan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={handleDelete}
+            >
+              Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AvatarDropzoneDialog
+        open={open}
+        setOpen={setOpen}
+        currentImageUrl={userImageUrl ?? null}
+        onSaved={() => {
+          onsuccess?.();
+        }}
+      />
     </>
-  )
+  );
 }

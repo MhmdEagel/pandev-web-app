@@ -86,3 +86,25 @@ export async function updatePassword(data: { currentPassword: string; newPasswor
     return { success: false, error: "Gagal mengupdate password" };
   }
 }
+
+export async function updateUserImage(imageUrl: string | null) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: session.user.id },
+      data: { image: imageUrl },
+    });
+
+    return { success: true, data: { image: updatedUser.image } };
+  } catch (error) {
+    console.error("Error updating user image:", error);
+    return { success: false, error: "Gagal mengupdate avatar" };
+  }
+}
