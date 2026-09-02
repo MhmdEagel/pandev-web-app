@@ -87,6 +87,64 @@ export async function updatePassword(data: { currentPassword: string; newPasswor
   }
 }
 
+export async function addUser(data: {
+  fullname: string;
+  email: string;
+  password: string;
+  role: "ADMIN" | "USER";
+}) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    if (session.user.role !== "ADMIN") {
+      return { success: false, error: "Hanya admin yang dapat membuat user" };
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      return { success: false, error: "Email sudah digunakan" };
+    }
+
+    const hashedPassword = await hashPassword(data.password);
+
+    const user = await prisma.user.create({
+      data: {
+        fullname: data.fullname,
+        email: data.email,
+        role: data.role,
+        accounts: {
+          create: {
+            issuer: "local:credential",
+            accountId: "",
+            providerId: "credential",
+            password: hashedPassword,
+          },
+        },
+      },
+      include: { accounts: true },
+    });
+
+    await prisma.account.update({
+      where: { id: user.accounts[0].id },
+      data: { accountId: user.id },
+    });
+
+    return { success: true, data: { id: user.id, fullname: user.fullname, email: user.email } };
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return { success: false, error: "Gagal membuat user" };
+  }
+}
+
 export async function updateUserImage(imageUrl: string | null) {
   try {
     const session = await auth.api.getSession({

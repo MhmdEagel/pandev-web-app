@@ -12,8 +12,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
-import { MenuIcon, ZapIcon } from "lucide-react"
+import { Grid3x3Icon, LogOutIcon, MenuIcon, UserIcon, ZapIcon } from "lucide-react"
 import Image from "next/image"
+import { signOut, useSession } from "@/lib/auth-client"
+import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 const NAV_ITEMS = [
   { href: "/portfolio", label: "Portofolio" },
@@ -27,6 +29,44 @@ function isActive(pathname: string, href: string) {
 
 export default function Navbar() {
   const pathname = usePathname()
+
+  const session = useSession()
+
+
+  const handleLogout = async () => {
+    await signOut()
+    session.refetch()
+  }
+
+  const handleLoginBtn = () => {
+    if (session.data) {
+      return (
+        <div className="ml-4">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size={"icon"} variant={"ghost"}><UserIcon /></Button>
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col items-start w-fit">
+              <Link href={"/dashboard"}>
+                <Button variant={"outline"}><Grid3x3Icon /> Dashboard</Button>
+              </Link>
+              <Button variant={"outline"} onClick={() => handleLogout()}>
+                <LogOutIcon />
+                Logout
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
+      )
+    } else {
+      return (
+        <Link className="ml-4" href={"/auth/login"}>
+          <Button>Login</Button>
+        </Link>
+      )
+    }
+  }
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60">
@@ -55,12 +95,13 @@ export default function Navbar() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn("relative rounded-md px-3 py-2 text-sm font-medium ", active ? "text-primary" : "text-foreground")}
-            
+
               >
                 {item.label}
               </Link>
             )
           })}
+          {handleLoginBtn()}
         </nav>
 
         <Sheet>

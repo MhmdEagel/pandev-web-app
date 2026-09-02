@@ -14,8 +14,9 @@ import {
 import Image from "next/image";
 import { NavUser } from "./nav-user";
 import NavMain from "./nav-main";
-import { SIDEBAR_MAIN_ITEMS, SIDEBAR_SECONDARY_ITEMS } from "../_constants/sidebar-items";
 import { NavSecondary } from "./nav-secondary";
+import { NavAdmin } from "./nav-admin";
+import { SIDEBAR_MAIN_ITEMS, SIDEBAR_SECONDARY_ITEMS, SIDEBAR_ADMIN_ITEMS } from "../_constants/sidebar-items";
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
@@ -40,11 +41,12 @@ export default function DashboardSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={SIDEBAR_MAIN_ITEMS} activePath={activePath}  />
+        <NavMain items={SIDEBAR_MAIN_ITEMS} activePath={activePath} />
+        <NavAdmin items={SIDEBAR_ADMIN_ITEMS} activePath={activePath} />
         <NavSecondary items={SIDEBAR_SECONDARY_ITEMS} activePath={activePath} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser  />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

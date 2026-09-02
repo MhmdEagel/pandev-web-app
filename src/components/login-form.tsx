@@ -46,7 +46,7 @@ export function LoginForm({
       });
 
       if (error) {
-        throw new Error(error.message || "Login failed");
+        throw new Error("Email atau password salah");
       }
     },
     onSuccess: () => {
@@ -55,7 +55,7 @@ export function LoginForm({
       router.refresh();
     },
     onError: (error) => {
-      toast.error(error.message || "Login failed. Please try again.");
+      toast.error(error.message || "Login gagal. Coba lagi");
     },
   });
 

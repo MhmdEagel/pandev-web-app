@@ -1,7 +1,7 @@
 "use client";
 
 import { getPortfolioByUuid, updatePortfolio } from "@/app/actions/portfolio";
-import { deleteFile } from "@/app/actions/upload";
+import { deleteMedia } from "@/app/actions/media";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,8 +98,7 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
   useEffect(() => {
     const cleanup = () => {
       for (const url of uploadedFilesRef.current) {
-        const filename = url.replace("/uploads/", "");
-        deleteFile(filename);
+        deleteMedia(url);
       }
     };
 
@@ -128,8 +127,7 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
 
   const handleCancel = () => {
     for (const url of uploadedFilesRef.current) {
-      const filename = url.replace("/uploads/", "");
-      deleteFile(filename);
+      deleteMedia(url);
     }
     uploadedFilesRef.current = [];
     router.back();

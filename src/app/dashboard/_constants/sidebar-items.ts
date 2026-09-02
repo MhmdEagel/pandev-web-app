@@ -4,7 +4,7 @@ import {
   SettingsIcon,
   HelpCircleIcon,
   UsersIcon,
-  LogsIcon,
+  ShieldIcon,
 } from "lucide-react";
 
 export const SIDEBAR_MAIN_ITEMS = [
@@ -35,13 +35,8 @@ export const SIDEBAR_SECONDARY_ITEMS = [
 
 export const SIDEBAR_ADMIN_ITEMS = [
   {
-    title: "User",
-    href: "/dashboard/users",
+    title: "Manajemen User",
+    href: "/dashboard/user-management",
     icon: UsersIcon,
   },
-  {
-    title: "Activity Logs",
-    href: "/dashboard/logs",
-    icon: LogsIcon,  
-  }
-]
+];

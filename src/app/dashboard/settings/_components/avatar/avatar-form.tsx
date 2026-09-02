@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteFile } from "@/app/actions/upload";
+import { deleteMedia } from "@/app/actions/media";
 import { updateUserImage } from "@/app/actions/user";
 import { PenIcon, TrashIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
@@ -31,8 +31,7 @@ export default function AvatarForm({ userImageUrl, onsuccess }: PropTypes) {
   const handleDelete = async () => {
     if (!userImageUrl) return;
 
-    const filename = userImageUrl.replace("/uploads/", "");
-    const deleteResult = await deleteFile(filename);
+    const deleteResult = await deleteMedia(userImageUrl);
     if (!deleteResult.success) {
       toast.error("Gagal menghapus file avatar");
       return;

@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadFile, deleteFile } from "@/app/actions/upload";
+import { uploadMedia, deleteMedia } from "@/app/actions/media";
 import { updateUserImage } from "@/app/actions/user";
 import { Button } from "@/components/ui/button";
 import {
@@ -106,8 +106,7 @@ export default function AvatarDropzoneDialog({
 
   const cleanupTempFile = useCallback(async () => {
     if (tempUploadedUrl && tempUploadedUrl !== currentImageUrl) {
-      const filename = tempUploadedUrl.replace("/uploads/", "");
-      await deleteFile(filename);
+      await deleteMedia(tempUploadedUrl);
     }
   }, [tempUploadedUrl, currentImageUrl]);
 
@@ -156,9 +155,7 @@ export default function AvatarDropzoneDialog({
         type: "image/jpeg",
       });
 
-      const formData = new FormData();
-      formData.append("file", croppedFile);
-      const result = await uploadFile(formData);
+      const result = await uploadMedia(croppedFile, "pandev/avatars");
 
       if (result.success && result.url) {
         setTempUploadedUrl(result.url);
@@ -179,8 +176,7 @@ export default function AvatarDropzoneDialog({
     setIsProcessing(true);
     try {
       if (currentImageUrl) {
-        const oldFilename = currentImageUrl.replace("/uploads/", "");
-        await deleteFile(oldFilename);
+        await deleteMedia(currentImageUrl);
       }
 
       const result = await updateUserImage(tempUploadedUrl);
@@ -202,8 +198,7 @@ export default function AvatarDropzoneDialog({
 
   const handleGantiFoto = async () => {
     if (tempUploadedUrl && tempUploadedUrl !== currentImageUrl) {
-      const filename = tempUploadedUrl.replace("/uploads/", "");
-      await deleteFile(filename);
+      await deleteMedia(tempUploadedUrl);
     }
     setTempUploadedUrl("");
     setStep("dropzone");

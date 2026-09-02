@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadFile, deleteFile } from "@/app/actions/upload";
+import { uploadMedia, deleteMedia } from "@/app/actions/media";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
@@ -38,9 +38,7 @@ export default function GaleryDropzone(props: PropTypes) {
     setUploadingIndexes((prev) => [...prev, tempIndex]);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const result = await uploadFile(formData);
+      const result = await uploadMedia(file, "pandev/portfolio/gallery");
 
       if (result.success && result.url) {
         onChange([...value, result.url]);
@@ -57,8 +55,7 @@ export default function GaleryDropzone(props: PropTypes) {
   const handleDeleteMedia = async (index: number) => {
     const url = value[index];
     if (url) {
-      const filename = url.replace("/uploads/", "");
-      await deleteFile(filename);
+      await deleteMedia(url);
     }
     onChange(value.filter((_, i) => i !== index));
   };

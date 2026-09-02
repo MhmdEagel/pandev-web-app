@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { deleteMultipleFiles, uploadFile, uploadMultipleFiles } from "./upload";
+import { deleteMultipleMedia } from "./media";
 
 export async function getPortfolioByUuid(uuid: string) {
   try {
@@ -35,17 +35,15 @@ export async function deletePortfolio(uuid: string) {
     const filesToDelete: string[] = [];
 
     if (portfolio.thumbnail) {
-      const thumbnailFile = portfolio.thumbnail.replace("/uploads/", "");
-      filesToDelete.push(thumbnailFile);
+      filesToDelete.push(portfolio.thumbnail);
     }
 
     for (const image of portfolio.galery) {
-      const imageFile = image.image_url.replace("/uploads/", "");
-      filesToDelete.push(imageFile);
+      filesToDelete.push(image.image_url);
     }
 
     if (filesToDelete.length > 0) {
-      await deleteMultipleFiles(filesToDelete);
+      await deleteMultipleMedia(filesToDelete);
     }
 
     await prisma.portfolio.delete({
@@ -139,8 +137,7 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
     }
 
     if (data.thumbnail !== existing.thumbnail) {
-      const oldFile = existing.thumbnail.replace("/uploads/", "");
-      await deleteMultipleFiles([oldFile]);
+      await deleteMultipleMedia([existing.thumbnail]);
     }
 
     const existingGalleryUrls = existing.galery.map((g) => g.image_url);
@@ -149,10 +146,7 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
     );
 
     if (removedGalleryUrls.length > 0) {
-      const filesToDelete = removedGalleryUrls.map((url) =>
-        url.replace("/uploads/", ""),
-      );
-      await deleteMultipleFiles(filesToDelete);
+      await deleteMultipleMedia(removedGalleryUrls);
     }
 
     await prisma.portfolioGalery.deleteMany({

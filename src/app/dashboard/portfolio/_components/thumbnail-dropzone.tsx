@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadFile, deleteFile } from "@/app/actions/upload";
+import { uploadMedia, deleteMedia } from "@/app/actions/media";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
@@ -31,9 +31,7 @@ export default function ThumbnailDropzone(props: PropTypes) {
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const result = await uploadFile(formData);
+      const result = await uploadMedia(file, "pandev/portfolio/thumbnails");
 
       if (result.success && result.url) {
         onChange(result.url);
@@ -50,8 +48,7 @@ export default function ThumbnailDropzone(props: PropTypes) {
   const handleDelete = async () => {
     if (!value) return;
 
-    const filename = value.replace("/uploads/", "");
-    await deleteFile(filename);
+    await deleteMedia(value);
     onChange("");
   };
 
