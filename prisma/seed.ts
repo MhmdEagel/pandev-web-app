@@ -20,10 +20,10 @@ async function main() {
 
   const user = await prisma.user.create({
     data: {
-      fullname: "Admin",
-      email: "admin@pandev.com",
-      emailVerified: true,
-      role: Role.ADMIN,
+      fullname: "Demo Akun",
+      email: "demoakun@pandev.com",
+    emailVerified: true,
+      role: Role.USER,
       accounts: {
         create: {
           issuer: "local:credential",
