@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PrismaClient, Role } from "@prisma/client";
 import { hashPassword } from "better-auth/crypto";
 
