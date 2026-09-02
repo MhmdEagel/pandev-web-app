@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import PortfolioContent from "./_components/portfolio-content";
 import DashboardHeader from "../_components/dashboard-header";
 
