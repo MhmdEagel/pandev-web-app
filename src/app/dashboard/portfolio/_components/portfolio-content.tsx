@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { getPortfolios } from "@/app/actions/portfolio";
+import { getPortfolios } from "@/actions/portfolio";
 import { useQuery } from "@tanstack/react-query";
 import PortfolioItem from "./portfolio-item";
 import PortfolioItemSkeleton from "./portfolio-item-skeleton";

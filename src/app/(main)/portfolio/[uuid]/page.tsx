@@ -1,6 +1,6 @@
 "use client";
 
-import { getPortfolioByUuid } from "@/app/actions/portfolio";
+import { getPortfolioByUuid } from "@/actions/portfolio";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import PortfolioDetail from "../_components/portfolio-detail";

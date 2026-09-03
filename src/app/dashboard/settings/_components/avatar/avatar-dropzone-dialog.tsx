@@ -1,7 +1,7 @@
 "use client";
 
-import { uploadMedia, deleteMedia } from "@/app/actions/media";
-import { updateUserImage } from "@/app/actions/user";
+import { uploadMedia, deleteMedia } from "@/actions/media";
+import { updateUserImage } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

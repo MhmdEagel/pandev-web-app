@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { updateUserProfile } from "@/app/actions/user";
+import { updateUserProfile } from "@/actions/user";
 
 interface PropTypes {
     userEmail?: string;

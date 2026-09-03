@@ -8,7 +8,7 @@ async function main() {
   console.log("Seeding database...");
 
   const existingUser = await prisma.user.findUnique({
-    where: { email: "admin@pandev.com" },
+    where: { email: "admin@gmail.com" },
   });
 
   if (existingUser) {
@@ -20,8 +20,8 @@ async function main() {
 
   const user = await prisma.user.create({
     data: {
-      fullname: "Demo Akun",
-      email: "demoakun@pandev.com",
+      fullname: "Admin PanDev",
+      email: "admin@gmail.com",
     emailVerified: true,
       role: Role.USER,
       accounts: {
@@ -43,7 +43,6 @@ async function main() {
   });
 
   console.log("Created admin user:", user.email);
-  console.log("Email: admin@pandev.com");
   console.log("Password: password123");
   console.log("Role:", user.role);
 }

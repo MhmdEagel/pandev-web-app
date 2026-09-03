@@ -1,6 +1,7 @@
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import DashboardSidebar from "./_components/dashboard-sidebar";
+import AiDrawer from "./_components/ai-drawer";
 
 export default function DashboardLayout({
   children,
@@ -12,8 +13,9 @@ export default function DashboardLayout({
       <SidebarProvider>
         <DashboardSidebar />
         <SidebarInset>
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-4 relative">
             {children}
+            <AiDrawer />
           </div>
         </SidebarInset>
       </SidebarProvider>

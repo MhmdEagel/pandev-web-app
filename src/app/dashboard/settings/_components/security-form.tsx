@@ -10,7 +10,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
-import { updatePassword } from "@/app/actions/user"
+import { updatePassword } from "@/actions/user"
 
 const formSchema = z.object({
   currentPassword: z.string().min(1, "Password wajib diisi"),

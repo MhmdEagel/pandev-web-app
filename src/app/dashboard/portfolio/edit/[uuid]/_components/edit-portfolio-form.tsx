@@ -1,7 +1,7 @@
 "use client";
 
-import { getPortfolioByUuid, updatePortfolio } from "@/app/actions/portfolio";
-import { deleteMedia } from "@/app/actions/media";
+import { getPortfolioByUuid, updatePortfolio } from "@/actions/portfolio";
+import { deleteMedia } from "@/actions/media";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

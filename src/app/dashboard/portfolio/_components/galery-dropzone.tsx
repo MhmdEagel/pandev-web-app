@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadMedia, deleteMedia } from "@/app/actions/media";
+import { uploadMedia, deleteMedia } from "@/actions/media";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";

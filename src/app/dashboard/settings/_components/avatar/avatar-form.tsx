@@ -12,8 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteMedia } from "@/app/actions/media";
-import { updateUserImage } from "@/app/actions/user";
+import { deleteMedia } from "@/actions/media";
+import { updateUserImage } from "@/actions/user";
 import { PenIcon, TrashIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";

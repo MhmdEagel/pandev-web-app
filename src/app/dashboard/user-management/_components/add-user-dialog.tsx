@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { addUser } from "@/app/actions/user";
+import { addUser } from "@/actions/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PlusIcon, EyeIcon, EyeOffIcon } from "lucide-react";
