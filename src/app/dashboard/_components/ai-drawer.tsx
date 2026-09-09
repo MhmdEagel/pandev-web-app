@@ -14,9 +14,11 @@ import { BotIcon, BrainIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AiTextarea from "./ai-textarea";
 import { useMutation } from "@tanstack/react-query";
-import { getAiResponse } from "@/actions/ai";
-import { Conversation, Interaction } from "@/types/Ai";
+import { getAiResponse } from "@/actions/gemini/ai";
+import { Interaction } from "@/types/Ai";
 import { Spinner } from "@/components/ui/spinner";
+
+import Markdown from "react-markdown";
 
 export default function AiDrawer() {
   const [open, setOpen] = useState(false);
@@ -83,7 +85,7 @@ export default function AiDrawer() {
   return (
     <Drawer open={open} onOpenChange={setOpen} direction="right" modal={false}>
       <DrawerTrigger asChild>
-        <Button className="absolute bottom-5 right-5 flex items-center text-white py-6 rounded-full px-4">
+        <Button className="fixed bottom-5 right-5 flex items-center text-white py-6 rounded-full px-4">
           {open ? <XIcon className="size-5" /> : <BotIcon className="size-5" />}
           AI Assistant
         </Button>
@@ -109,30 +111,27 @@ export default function AiDrawer() {
             <>
               {conversation.conversations.map((item, index) =>
                 item.type === "model_output" ? (
-                  <div
-                    className="w-fit max-w-full"
-                    key={`ai-response-${index}`}
-                  >
+                  <div className="w-fit" key={`ai-response-${index}`}>
                     <div className="flex items-center gap-2 mb-2">
                       <BotIcon />
                       <div>Iria</div>
                     </div>
-                    <div className="border p-4 rounded-2xl rounded-tl-none shadow-md">
-                      {item.content[0].text}
+                    <div className="w-fit max-w-[66.666667%] wrap-break-word whitespace-pre-wrap rounded-2xl rounded-tl-none border p-4 shadow-md">
+                      <div className="prose-sm">
+                        <Markdown>{item.content[0].text}</Markdown>
+                      </div>
                     </div>
                   </div>
                 ) : (
                   <div
                     key={`user-response-${index}`}
-                    className="border p-4 rounded-2xl rounded-br-none w-fit max-w-3/2 ml-auto shadow-md text-balance"
+                    className="ml-auto w-fit max-w-[66.666667%] wrap-break-word whitespace-pre-wrap rounded-2xl rounded-br-none border p-4 text-balance shadow-md"
                   >
                     {item.content[0].text}
                   </div>
                 ),
               )}
-              <div>
-                {isPending && <Spinner variant="ellipsis" />}
-              </div>
+              <div>{isPending && <Spinner variant="ellipsis" />}</div>
             </>
           ) : (
             <div className="flex flex-col h-full items-center justify-center">
@@ -144,7 +143,7 @@ export default function AiDrawer() {
           )}
         </div>
         <DrawerFooter>
-          <AiTextarea sendMessage={sendMessage} />
+          <AiTextarea sendMessage={sendMessage} isPending={isPending} />
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

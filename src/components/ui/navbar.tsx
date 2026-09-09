@@ -88,7 +88,6 @@ export default function Navbar() {
         >
           {NAV_ITEMS.map((item) => {
             const active = isActive(pathname, item.href)
-            console.log(pathname)
             return (
               <Link
                 key={item.href}

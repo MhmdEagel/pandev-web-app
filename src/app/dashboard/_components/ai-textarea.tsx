@@ -8,6 +8,7 @@ import z from "zod";
 
 interface PropTypes {
   sendMessage: (message: string) => void;
+  isPending: boolean;
 }
 
 const formSchema = z.object({
@@ -15,7 +16,7 @@ const formSchema = z.object({
 });
 
 export default function AiTextarea(props: PropTypes) {
-  const { sendMessage } = props;
+  const { sendMessage, isPending } = props;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -23,12 +24,14 @@ export default function AiTextarea(props: PropTypes) {
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     sendMessage(data.message);
+    form.reset();
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       onSubmit(form.getValues());
+      form.reset();
     }
   };
 
@@ -47,7 +50,11 @@ export default function AiTextarea(props: PropTypes) {
             />
           )}
         />
-        <Button size={"icon"} className="absolute right-2 bottom-2">
+        <Button
+          disabled={isPending}
+          size={"icon"}
+          className="absolute right-2 bottom-2"
+        >
           <SendHorizontalIcon />
         </Button>
       </form>

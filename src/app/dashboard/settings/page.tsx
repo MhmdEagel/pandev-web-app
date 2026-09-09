@@ -13,7 +13,7 @@ export default function SettingsPage() {
   const currentUser = session.data.user
   console.log(currentUser)
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-16">
       <DashboardHeader title="Pengaturan" description="Kelola avatar, data diri, dan keamanan akun Anda" />
       <AvatarForm userImageUrl={currentUser?.image} onsuccess={() => session.refetch()} />
       <InformationForm userEmail={currentUser?.email} userFullname={currentUser?.name} onsuccess={() => session.refetch()} />
