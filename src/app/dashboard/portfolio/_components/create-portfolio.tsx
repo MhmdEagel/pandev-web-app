@@ -28,7 +28,6 @@ import TechStackSelect from "./tech-stack-select";
 import { useEffect, useRef, useState } from "react";
 import { PORTFOLIO_CATEGORIES } from "../_constants/categories";
 import { useRouter } from "next/navigation";
-import WizardInput from "./wizard-input";
 
 const formSchema = z.object({
   thumbnail: z.string().min(1, "Thumbnail wajib diupload"),
@@ -122,9 +121,6 @@ export default function CreatePortfolio() {
   };
   return (
     <>
-      <div className="mb-4">
-        <WizardInput setTechStacks={setTechStacks} setValue={form.setValue} />
-      </div>
       <Card>
         <CardContent>
           <form

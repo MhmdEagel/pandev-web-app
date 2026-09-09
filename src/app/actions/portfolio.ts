@@ -71,12 +71,12 @@ export async function getPortfolios() {
 }
 
 interface CreatePortfolioInput {
-  thumbnail: string;
+  thumbnail?: string;
   name: string;
   category: string;
   description: string;
   demo_link?: string;
-  repository_link: string;
+  repository_link?: string;
   status?: string;
   tech_stacks?: string[];
   galery?: string[];
@@ -86,12 +86,12 @@ export async function createPortfolio(data: CreatePortfolioInput) {
   try {
     const portfolio = await prisma.portfolio.create({
       data: {
-        thumbnail: data.thumbnail,
+        thumbnail: data.thumbnail || "",
         name: data.name,
         category: data.category,
         description: data.description,
         demo_link: data.demo_link || null,
-        repository_link: data.repository_link,
+        repository_link: data.repository_link || "",
         status: data.status || "draft",
         tech_stacks: data.tech_stacks || [],
         galery: {
@@ -114,12 +114,12 @@ export async function createPortfolio(data: CreatePortfolioInput) {
 
 interface UpdatePortfolioInput {
   uuid: string;
-  thumbnail: string;
+  thumbnail?: string;
   name: string;
   category: string;
   description: string;
   demo_link?: string;
-  repository_link: string;
+  repository_link?: string;
   status?: string;
   tech_stacks?: string[];
   galery?: string[];
@@ -156,12 +156,12 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
     const portfolio = await prisma.portfolio.update({
       where: { id: data.uuid },
       data: {
-        thumbnail: data.thumbnail,
+        thumbnail: data.thumbnail || "",
         name: data.name,
         category: data.category,
         description: data.description,
         demo_link: data.demo_link || null,
-        repository_link: data.repository_link,
+        repository_link: data.repository_link || "",
         status: data.status || "draft",
         tech_stacks: data.tech_stacks || [],
         galery: {
