@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
   CodeIcon,
   ExternalLinkIcon,
+  ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Portfolio } from "@/app/dashboard/portfolio/_types/portfolio";
@@ -31,8 +32,14 @@ export default function PortfolioDetail(props: PropTypes) {
     galery,
   } = portfolio;
 
-  const images =
-    galery && galery.length > 0 ? galery.map((g) => g.image_url) : [thumbnail];
+  const allImages =
+    galery && galery.length > 0
+      ? galery.map((g) => g.image_url).filter(Boolean)
+      : thumbnail
+        ? [thumbnail]
+        : [];
+  const hasImages = allImages.length > 0;
+  const images = hasImages ? allImages : [];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -58,13 +65,19 @@ export default function PortfolioDetail(props: PropTypes) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <Image
-              src={images[selectedIndex]}
-              alt={`${name} - Image ${selectedIndex + 1}`}
-              fill
-              className="object-cover"
-              priority
-            />
+            {hasImages ? (
+              <Image
+                src={images[selectedIndex]}
+                alt={`${name} - Image ${selectedIndex + 1}`}
+                fill
+                className="object-cover"
+                priority
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-muted">
+                <ImageIcon className="size-16 text-muted-foreground/50" />
+              </div>
+            )}
             {images.length > 1 && (
               <>
                 <Button
@@ -97,7 +110,7 @@ export default function PortfolioDetail(props: PropTypes) {
         </div>
 
         {/* Thumbnail Navigation - Horizontal scroll */}
-        {images.length > 1 && (
+        {hasImages && images.length > 1 && (
           <div className="flex gap-2 pb-2 mt-4 overflow-x-auto snap-x snap-mandatory">
             {images.map((image, index) => (
               <button
@@ -132,6 +145,7 @@ export default function PortfolioDetail(props: PropTypes) {
               <span className="px-2 py-1 text-sm font-medium rounded-full bg-primary/10 text-primary">
                 {category}
               </span>
+              
             </div>
           </div>
         </CardHeader>

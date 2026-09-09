@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ClockIcon, ExternalLinkIcon } from "lucide-react";
+import { ClockIcon, ExternalLinkIcon, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 interface Portfolio {
   id: string;
-  thumbnail: string;
+  thumbnail?: string | null;
   name: string;
   category: string;
   description: string;
@@ -57,13 +57,19 @@ export default function PortfolioCard({ portfolio }: PropTypes) {
       <Card className="hover:scale-[102%] transition-all">
         <CardHeader>
           <div className="object-cover aspect-video">
-            <Image
-              className="w-full rounded-tl-lg rounded-tr-lg"
-              src={thumbnail}
-              width={300}
-              height={300}
-              alt={name}
-            />
+            {thumbnail ? (
+              <Image
+                className="w-full rounded-tl-lg rounded-tr-lg"
+                src={thumbnail}
+                width={300}
+                height={300}
+                alt={name}
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-muted rounded-tl-lg rounded-tr-lg">
+                <ImageIcon className="size-10 text-muted-foreground/50" />
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardContent>
