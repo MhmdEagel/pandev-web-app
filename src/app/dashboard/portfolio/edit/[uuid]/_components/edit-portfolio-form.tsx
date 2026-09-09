@@ -30,13 +30,13 @@ import { PORTFOLIO_CATEGORIES } from "../../../_constants/categories";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  thumbnail: z.string().min(1, "Thumbnail wajib diupload"),
+  thumbnail: z.string().optional(),
   name: z.string().min(1, "Nama wajib diisi"),
   status: z.string().min(1, "Status wajib diisi"),
   category: z.string().min(1, "Kategori wajib diisi"),
   description: z.string().min(1, "Deskripsi wajib diisi"),
   demo_link: z.string().optional(),
-  repository_link: z.string().min(1, "Link Repository wajib diisi"),
+  repository_link: z.string().optional(),
   galery: z.array(z.string()).optional(),
 });
 
@@ -81,13 +81,20 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
       const existingGalleryUrls =
         portfolio.galery?.map((g) => g.image_url) || [];
 
-      if (thumbnailValue && thumbnailValue !== existingThumbnail && !uploadedFilesRef.current.includes(thumbnailValue)) {
+      if (
+        thumbnailValue &&
+        thumbnailValue !== existingThumbnail &&
+        !uploadedFilesRef.current.includes(thumbnailValue)
+      ) {
         uploadedFilesRef.current.push(thumbnailValue);
       }
 
       if (galleryValue) {
         for (const url of galleryValue) {
-          if (!existingGalleryUrls.includes(url) && !uploadedFilesRef.current.includes(url)) {
+          if (
+            !existingGalleryUrls.includes(url) &&
+            !uploadedFilesRef.current.includes(url)
+          ) {
             uploadedFilesRef.current.push(url);
           }
         }
@@ -109,7 +116,7 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
 
   useEffect(() => {
     if (portfolio) {
-      form.setValue("thumbnail", portfolio.thumbnail)
+      form.setValue("thumbnail", portfolio.thumbnail ?? "");
       form.setValue("name", portfolio.name);
       form.setValue("category", portfolio.category);
       form.setValue("description", portfolio.description);
@@ -272,8 +279,8 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
                       <Field>
                         <FieldLabel htmlFor="status-form">Status</FieldLabel>
                         <Select
+                          value={field.value}
                           onValueChange={field.onChange}
-                          defaultValue={portfolio.status}
                         >
                           <SelectTrigger aria-invalid={fieldState.invalid}>
                             <SelectValue
@@ -283,10 +290,8 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value="Draft">Draft</SelectItem>
-                              <SelectItem value="Publish">
-                                Publish
-                              </SelectItem>
+                              <SelectItem value="draft">Draft</SelectItem>
+                              <SelectItem value="published">Publish</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -303,8 +308,8 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
                           Kategori
                         </FieldLabel>
                         <Select
+                          value={field.value}
                           onValueChange={field.onChange}
-                          defaultValue={portfolio.category}
                         >
                           <SelectTrigger aria-invalid={fieldState.invalid}>
                             <SelectValue

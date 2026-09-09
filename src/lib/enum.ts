@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/client";
 
 export function toRole(value: string): Role {
   const normalized = value.toUpperCase();

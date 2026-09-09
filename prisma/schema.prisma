@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 enum Role {
@@ -74,7 +74,7 @@ model Verification {
 
 model Portfolio {
   id              String          @id @default(uuid())
-  thumbnail       String
+  thumbnail       String?
   name            String
   category        String
   description     String
@@ -82,6 +82,7 @@ model Portfolio {
   repository_link String
   status          String          @default("draft")
   tech_stacks     Json            @default("[]")
+  embedding       Unsupported("vector(768)")?
   galery          PortfolioGalery[]
   created_at      DateTime        @default(now())
   updated_at      DateTime        @updatedAt

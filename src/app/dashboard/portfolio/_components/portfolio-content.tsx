@@ -134,6 +134,7 @@ export default function PortfolioContent() {
         </Link>
       </div>
 
+
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">
           {searchQuery && (
