@@ -44,7 +44,7 @@ export default function DashboardSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={SIDEBAR_MAIN_ITEMS} activePath={activePath} />
-        {session?.user.role === "ADMIN" && (
+        {(session?.user as { role?: string })?.role === "ADMIN" && (
           <NavAdmin items={SIDEBAR_ADMIN_ITEMS} activePath={activePath} />
         )}
         <NavSecondary items={SIDEBAR_SECONDARY_ITEMS} activePath={activePath} />

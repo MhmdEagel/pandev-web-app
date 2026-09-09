@@ -1,6 +1,6 @@
 export interface Portfolio {
   id: string;
-  thumbnail: string;
+  thumbnail: string | null;
   name: string;
   category: string;
   description: string;

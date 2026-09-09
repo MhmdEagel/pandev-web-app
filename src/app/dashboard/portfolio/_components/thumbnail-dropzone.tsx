@@ -10,7 +10,7 @@ import { DragEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface PropTypes {
-  value: string;
+  value?: string;
   onChange: (url: string) => void;
   isinvalid: string;
 }
@@ -28,7 +28,6 @@ export default function ThumbnailDropzone(props: PropTypes) {
       toast.error("Ukuran file maksimal 5MB");
       return;
     }
-
     setIsUploading(true);
     try {
       const result = await uploadMedia(file, "pandev/portfolio/thumbnails");

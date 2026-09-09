@@ -30,13 +30,13 @@ import { PORTFOLIO_CATEGORIES } from "../_constants/categories";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  thumbnail: z.string().min(1, "Thumbnail wajib diupload"),
+  thumbnail: z.string().optional(),
   name: z.string().min(1, "Nama wajib diisi"),
   status: z.string().min(1, "Status wajib diisi"),
   category: z.string().min(1, "Kategori wajib diisi"),
   description: z.string().min(1, "Deskripsi wajib diisi"),
   demo_link: z.string().optional(),
-  repository_link: z.string().min(1, "Link Repository wajib diisi"),
+  repository_link: z.string().optional(),
   galery: z.array(z.string()).optional(),
 });
 
@@ -109,7 +109,7 @@ export default function EditPortfolio({ uuid }: PropTypes) {
 
   useEffect(() => {
     if (portfolio) {
-      form.setValue("thumbnail", portfolio.thumbnail)
+      form.setValue("thumbnail", portfolio.thumbnail ?? "");
       form.setValue("name", portfolio.name);
       form.setValue("category", portfolio.category);
       form.setValue("description", portfolio.description);

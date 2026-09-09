@@ -12,39 +12,7 @@ import {
   ComboboxEmpty,
 } from "@/components/ui/combobox";
 import { XIcon } from "lucide-react";
-
-const AVAILABLE_TECH_STACKS = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "JavaScript",
-  "Tailwind CSS",
-  "Node.js",
-  "Python",
-  "Java",
-  "PHP",
-  "Laravel",
-  "Django",
-  "Express.js",
-  "PostgreSQL",
-  "MySQL",
-  "MongoDB",
-  "Firebase",
-  "Docker",
-  "AWS",
-  "Flutter",
-  "React Native",
-  "Vue.js",
-  "Angular",
-  "Svelte",
-  "Prisma",
-  "GraphQL",
-  "Redis",
-  "Nginx",
-  "Git",
-  "Figma",
-  "Photoshop",
-];
+import { AVAILABLE_TECH_STACKS } from "@/lib/constants";
 
 interface TechStack {
   id: string;
