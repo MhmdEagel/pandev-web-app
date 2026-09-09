@@ -24,6 +24,7 @@ import {
   ClockIcon,
   EllipsisVerticalIcon,
   ExternalLinkIcon,
+  ImageIcon,
   PenIcon,
   TrashIcon,
 } from "lucide-react";
@@ -89,13 +90,19 @@ export default function PortfolioItem(props: PropTypes) {
       <Card className="hover:scale-[102%] transition-all">
         <CardHeader>
           <div>
-            <Image
-              className="w-full rounded-tl-lg rounded-tr-lg object-cover aspect-video"
-              src={thumbnail}
-              width={200}
-              height={300}
-              alt={name}
-            />
+            {thumbnail ? (
+              <Image
+                className="w-full rounded-tl-lg rounded-tr-lg object-cover aspect-video"
+                src={thumbnail}
+                width={200}
+                height={300}
+                alt={name}
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full aspect-video bg-muted rounded-tl-lg rounded-tr-lg">
+                <ImageIcon className="size-10 text-muted-foreground/50" />
+              </div>
+            )}
           </div>
         </CardHeader>
         <CardContent>

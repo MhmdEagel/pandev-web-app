@@ -6,8 +6,11 @@ import DashboardHeader from "../_components/dashboard-header";
 export default function PortfolioPage() {
   return (
     <div className="space-y-4">
-      <DashboardHeader title="Portfolio" description="Kelola portfolio yang ingin Anda tampilkan" />
-        <PortfolioContent />
+      <DashboardHeader
+        title="Portfolio"
+        description="Kelola portfolio yang ingin Anda tampilkan"
+      />
+      <PortfolioContent />
     </div>
   );
 }
