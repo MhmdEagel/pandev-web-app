@@ -59,10 +59,32 @@ export async function getAiResponse({
   return { interaction_id: response.id, text: response.output_text };
 }
 
-export async function createPortfolioWizard(query: string) {
+export async function createPortfolioWizard(formData: FormData) {
+  const query = formData.get("query") as string;
+  const images = formData.get("images" as string);
+  const type = formData.get("type") as "audio" | "text";
+  const file = formData.get("file") as File;
+
+  let mimeType = "";
+  let base64data = "";
+
+  if (type === "audio") {
+    mimeType = file.type;
+    base64data = Buffer.from(await file.arrayBuffer()).toString("base64");
+  }
+
   const response = await ai.interactions.create({
     model: "gemini-3-flash-preview",
-    input: query,
+    input:
+      type === "text"
+        ? query
+        : [
+            {
+              type: "audio",
+              data: base64data,
+              mime_type: "audio/webm",
+            },
+          ],
     generation_config: {
       thinking_level: "minimal",
       max_output_tokens: 2048,
@@ -70,22 +92,37 @@ export async function createPortfolioWizard(query: string) {
     },
     system_instruction: `
       <role>
-        You are an ai assistant that responsible to create a portofolio item. You are working in a professional IT agency PanDev that offers service in website, mobile, and desktop app development. Also offers multimedia services like video editing, poster making, logo design for business needs. And it offers IOT Solutions
+        You are an ai assistant that responsible to create a portofolio item that extract details from the user query.
       </role>
-      <input>
-        User query: ${query}
-      </input>
       <context>
-        current Date: ${new Date().toISOString()}
+      current Date: ${new Date().toISOString()}
       </context>
       <instruction>
-        - Answer with simple, straight, and short answer
-        - Answer in bahasa indonesia
+      - Answer with simple, straight, and short answer
+      - Answer in bahasa indonesia
+      - Extract the portofolio details from the following ${type === "text" ? "text" : "audio"}
+      - If user just provide a single picture link, make it as the thumbnail of the portfolio
       </instruction>
       <constraint>
-        - Don't assume any data if user doesn't provide any data at all to you
-        - Only answer the questions only about portfolio management in the IT agency PanDev
+      - Don't assume any data if user doesn't provide any data at all to you
       </constraint>
+      ${
+        type === "text" &&
+        `
+        <input>
+        User query: ${query}
+        Link of images: ${images}
+      </input>
+        `
+      }
+      ${
+        type === "audio" &&
+        `
+      <input>
+        Link of images: ${images}
+      </input>
+        `
+      }
     `,
     tools: [createPortfolioFunction],
     // output control
@@ -95,8 +132,9 @@ export async function createPortfolioWizard(query: string) {
     if (step.type === "function_call") {
       switch (step.name) {
         case "create_portfolio":
+          console.log(JSON.stringify(step.arguments));
           return { message: response.output_text, data: step.arguments };
-          
+
         default:
           return { message: "Gagal mengisi form", data: null };
       }

@@ -21,7 +21,14 @@ const createPortfolioFunction = {
   parameters: {
     type: Type.OBJECT,
     properties: {
-      name: { type: Type.STRING, description: "name of the portfolio, capitalize" },
+      thumbnail: {
+        type: Type.STRING,
+        description: "an url or link of the portfolio thumbnail",
+      },
+      name: {
+        type: Type.STRING,
+        description: "name of the portfolio, capitalize",
+      },
       status: {
         type: Type.STRING,
         description:
@@ -52,6 +59,11 @@ const createPortfolioFunction = {
       createdAt: {
         type: Type.STRING,
         description: "the date of the item portfolio created in ISO format",
+      },
+      galery: {
+        type: Type.ARRAY,
+        description: "list of url for the portofolio galeries",
+        items: { type: Type.STRING },
       },
     },
   },

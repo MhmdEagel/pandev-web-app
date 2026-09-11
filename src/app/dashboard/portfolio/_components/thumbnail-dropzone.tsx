@@ -31,7 +31,6 @@ export default function ThumbnailDropzone(props: PropTypes) {
     setIsUploading(true);
     try {
       const result = await uploadMedia(file, "pandev/portfolio/thumbnails");
-
       if (result.success && result.url) {
         onChange(result.url);
       } else {
