@@ -5,6 +5,7 @@ import {
   HelpCircleIcon,
   UsersIcon,
   ShieldIcon,
+  WalletIcon,
 } from "lucide-react";
 
 export const SIDEBAR_MAIN_ITEMS = [
@@ -38,5 +39,10 @@ export const SIDEBAR_ADMIN_ITEMS = [
     title: "Manajemen User",
     href: "/dashboard/user-management",
     icon: UsersIcon,
+  },
+  {
+    title: "Keuangan",
+    href: "/dashboard/finance",
+    icon: WalletIcon,
   },
 ];

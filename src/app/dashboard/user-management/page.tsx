@@ -32,7 +32,7 @@ export default async function UserManagementPage() {
               <TableHead>Role</TableHead>
               <TableHead>Dibuat</TableHead>
               <TableHead>Diperbarui</TableHead>
-              <TableHead className="text-right">Aksi</TableHead>
+              <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,7 +66,7 @@ export default async function UserManagementPage() {
                       year: "numeric",
                     })}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell>
                     <UserActions userId={user.id} />
                   </TableCell>
                 </TableRow>

@@ -100,7 +100,6 @@ export default function CreatePortfolio() {
     };
   }, []);
 
-
   const { mutate, isPending } = useMutation({
     mutationFn: createPortfolio,
     onSuccess: (result) => {

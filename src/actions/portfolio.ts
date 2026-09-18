@@ -171,12 +171,12 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
     const portfolio = await prisma.portfolio.update({
       where: { id: data.uuid },
       data: {
-        thumbnail: data.thumbnail,
+        thumbnail: data.thumbnail || "",
         name: data.name,
         category: data.category,
         description: data.description,
         demo_link: data.demo_link || null,
-        repository_link: data.repository_link,
+        repository_link: data.repository_link || "",
         status: data.status || "draft",
         tech_stacks: data.tech_stacks || [],
         galery: {
