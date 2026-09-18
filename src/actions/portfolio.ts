@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { deleteMultipleMedia } from "./media";
 import { generateEmbedding } from "./gemini/embedding";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function getPortfolioByUuid(uuid: string) {
   try {
@@ -87,6 +89,11 @@ export async function createPortfolio(data: CreatePortfolioInput) {
   const values = await generateEmbedding(JSON.stringify(data));
   const vectorString = `[${values.join(",")}]`;
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const userData = session?.user;
+
   try {
     const portfolio = await prisma.portfolio.create({
       data: {
@@ -103,6 +110,7 @@ export async function createPortfolio(data: CreatePortfolioInput) {
             image_url: url,
           })),
         },
+        created_by: userData?.id
       },
       include: {
         galery: true,

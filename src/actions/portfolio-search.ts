@@ -2,6 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { generateEmbedding } from "./gemini/embedding";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface VectorSearchOptions {
   query: string;
@@ -17,6 +19,11 @@ export async function searchPortfolios({
   matchThreshold = DEFAULT_MATCH_THRESHOLD,
   matchCount = DEFAULT_MATCH_COUNT,
 }: VectorSearchOptions) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const userData = session?.user;
+
   try {
     const values = await generateEmbedding(query);
     const vectorString = `[${values.join(",")}]`;
@@ -52,10 +59,10 @@ export async function searchPortfolios({
       FROM "Portfolio"
       WHERE embedding IS NOT NULL
         AND 1 - (embedding <=> ${vectorString}::vector) > ${matchThreshold}
+        AND created_by = '${userData?.id}'
       ORDER BY embedding <=> ${vectorString}::vector
       LIMIT ${matchCount}
     `;
-
     return { success: true, data: results };
   } catch (error) {
     console.error("Error searching portfolios:", error);

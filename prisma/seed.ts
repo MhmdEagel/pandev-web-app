@@ -27,12 +27,30 @@ async function main() {
     data: {
       fullname: "Admin PanDev",
       email: "admin@gmail.com",
-    emailVerified: true,
+      emailVerified: true,
+      role: Role.ADMIN,
+      accounts: {
+        create: {
+          issuer: "local:credential",
+          accountId: "pending-admin",
+          providerId: "credential",
+          password: hashedPassword,
+        },
+      },
+    },
+    include: { accounts: true },
+  });
+
+  const user2 = await prisma.user.create({
+    data: {
+      fullname: "John Lieber",
+      email: "johnliebert@yopmail.com",
+      emailVerified: true,
       role: Role.USER,
       accounts: {
         create: {
           issuer: "local:credential",
-          accountId: "", // will be set after user creation
+          accountId: "pending-user",
           providerId: "credential",
           password: hashedPassword,
         },
@@ -47,9 +65,18 @@ async function main() {
     data: { accountId: user.id },
   });
 
+  await prisma.account.update({
+    where: { id: user2.accounts[0].id },
+    data: { accountId: user2.id },
+  });
+
   console.log("Created admin user:", user.email);
   console.log("Password: password123");
   console.log("Role:", user.role);
+
+  console.log("Created basic user:", user2.email);
+  console.log("Password: password123");
+  console.log("Role:", user2.role);
 }
 
 main()

@@ -15,7 +15,7 @@ export async function getAiResponse({
 
   let contextData = "";
 
-  if (!data || data.length === 0) {
+  if (!data || data.length === 0 || error) {
     contextData =
       "No relevant data found that are similar or relevant to the question";
   } else {
