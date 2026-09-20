@@ -1,6 +1,6 @@
 "use client";
 
-import { getTransactions } from "@/app/actions/transaction";
+import { getUsers } from "@/app/actions/user-management";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,60 +12,55 @@ import {
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { FilterIcon, PlusIcon } from "lucide-react";
+import { useState } from "react";
 import { Fragment } from "react/jsx-runtime";
-import TransactionTable from "./transaction-table";
-import CreateTransactionDialog from "./create-transaction-dialog";
-import { useDisclosure } from "@/hooks/use-disclosure";
+import CreateUserDialog from "./create-user-dialog";
+import UsersTable from "./users-table";
+import { IUser } from "../_types/User";
 
-export default function TransactionContent() {
+export default function UserManagementContent() {
   const {
     isPending,
-    data: transactions,
+    data: users,
     refetch,
   } = useQuery({
-    queryFn: getTransactions,
-    queryKey: ["transactions"],
+    queryFn: getUsers,
+    queryKey: ["users"],
   });
-  const {open, setOpen} = useDisclosure()
+  const [open, setOpen] = useState(false);
   return (
     <Fragment>
       <Card className="w-full gap-2">
         <CardHeader className="flex items-center justify-between border-b">
           <div>
             <div className="flex gap-2">
-              <CardTitle>Data Transaksi</CardTitle>
-              {transactions && transactions?.length > 0 ? (
+              <CardTitle>Data User</CardTitle>
+              {users && users?.length > 0 ? (
                 <Badge className="bg-green-100 text-primary px-1 hover:bg-green-100">
-                  Total {transactions?.length}
+                  Total {users?.length}
                 </Badge>
               ) : null}
             </div>
-            <CardDescription>
-              Berikut semua data transaksi yang ada
-            </CardDescription>
+            <CardDescription>Berikut semua data user yang ada</CardDescription>
           </div>
           <div className="space-x-2">
             <Button variant={"outline"}>
               <FilterIcon /> Filter
             </Button>
             <Button className="cursor-pointer" onClick={() => setOpen(true)}>
-              <PlusIcon /> Tambah
+              <PlusIcon /> Tambah User
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <TransactionTable
+          <UsersTable
             isPending={isPending}
-            transactions={transactions}
+            users={users as IUser[]}
             refetch={refetch}
           />
         </CardContent>
       </Card>
-      <CreateTransactionDialog
-        open={open}
-        setOpen={setOpen}
-        refetch={refetch}
-      />
+      <CreateUserDialog open={open} setOpen={setOpen} refetch={refetch} />
     </Fragment>
   );
 }

@@ -34,24 +34,9 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Link from "next/link";
+import { getRelativeTime } from "@/lib/utils";
 
-function getRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (diffInSeconds < 60) return "Baru saja";
-  if (diffInSeconds < 3600)
-    return `Diupdate ${Math.floor(diffInSeconds / 60)} menit yang lalu`;
-  if (diffInSeconds < 86400)
-    return `Diupdate ${Math.floor(diffInSeconds / 3600)} jam yang lalu`;
-  if (diffInSeconds < 604800)
-    return `Diupdate ${Math.floor(diffInSeconds / 86400)} hari yang lalu`;
-  if (diffInSeconds < 2592000)
-    return `Diupdate ${Math.floor(diffInSeconds / 604800)} minggu yang lalu`;
-  if (diffInSeconds < 31536000)
-    return `Diupdate ${Math.floor(diffInSeconds / 2592000)} bulan yang lalu`;
-  return `Diupdate ${Math.floor(diffInSeconds / 31536000)} tahun yang lalu`;
-}
 
 type PropTypes = Portfolio;
 
@@ -62,26 +47,21 @@ export default function PortfolioItem(props: PropTypes) {
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
-  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
     mutationFn: deletePortfolio,
-    onSuccess: (result) => {
-      if (result.success) {
-        toast.success("Portofolio berhasil dihapus");
-        queryClient.invalidateQueries({ queryKey: ["portfolios"] });
-      } else {
-        toast.error(result.error || "Gagal menghapus portofolio");
-      }
-      setOpenDeleteDialog(false);
+    onSuccess: () => {
+      toast.success("Berhasil menghapus portfolio")
+      setOpenDeleteDialog(false)
     },
     onError: (error) => {
-      toast.error(`Gagal menghapus portofolio: ${error.message}`);
+      toast.error(`Gagal menghapus portofolio`);
       setOpenDeleteDialog(false);
     },
   });
 
   const handleDelete = () => {
+    setOpenPopover(false);
     deleteMutation.mutate(id);
   };
 

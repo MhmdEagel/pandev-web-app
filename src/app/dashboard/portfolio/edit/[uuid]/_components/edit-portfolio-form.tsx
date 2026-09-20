@@ -48,12 +48,12 @@ interface PropTypes {
 
 export default function EditPortfolioForm({ uuid }: PropTypes) {
   const router = useRouter();
-  const { data: result, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["portfolio", uuid],
     queryFn: () => getPortfolioByUuid(uuid),
   });
 
-  const portfolio = result?.success && result.data ? result.data : null;
+  const portfolio = data ?? null;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -142,17 +142,11 @@ export default function EditPortfolioForm({ uuid }: PropTypes) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: updatePortfolio,
-    onSuccess: (result) => {
-      if (result.success) {
-        uploadedFilesRef.current = [];
-        toast.success("Portofolio berhasil diupdate");
-        router.push("/dashboard/portfolio");
-      } else {
-        toast.error(result.error || "Gagal mengupdate portofolio");
-      }
+    onSuccess: () => {
+      toast.success("Berhasil mengupdate portfolio");
     },
-    onError: (error) => {
-      toast.error(`Gagal mengupdate portofolio: ${error.message}`);
+    onError: () => {
+      toast.error(`Gagal mengupdate portofolio, Coba beberapa saat lagi`);
     },
   });
 

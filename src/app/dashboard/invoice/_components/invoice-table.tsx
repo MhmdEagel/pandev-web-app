@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteTransaction, getTransactions } from "@/app/actions/transaction";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,62 +39,80 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn, convertToIDR } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import {
-  EllipsisVerticalIcon,
-  ExternalLinkIcon,
-  MinusIcon,
-  PencilIcon,
-  PlusIcon,
-  PrinterIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { ExternalLinkIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 import { toast } from "sonner";
-import DeleteTransactionDialog from "./delete-transaction-dialog";
 import { useState } from "react";
-import { Transaction } from "@prisma/client";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useDisclosure } from "@/hooks/use-disclosure";
-import EditTransactionDialog from "./edit-transaction-dialog";
+import { IInvoiceExtended } from "../_types/Invoice";
+import { deleteInvoice } from "@/app/actions/invoice";
+import DeleteInvoiceDialog from "./delete-invoice-dialog";
 
-const TABLE_HEADER = ["#", "Date", "Total Amount", "Description", "Action"];
+import InvoiceTableAction from "./invoice-table-action";
+import DetailInvoiceDialog from "./detail-invoice-dialog";
+import { useDisclosure } from "@/hooks/use-disclosure";
+import { cn, getInvoiceStatus } from "@/lib/utils";
+import EditInvoiceDialog from "./edit-invoice-dialog";
+
+const TABLE_HEADER = ["#", "Date", "Description", "Status", "Action"];
 
 interface PropTypes {
   isPending: boolean;
-  transactions: Transaction[] | undefined;
+  invoices: IInvoiceExtended[] | undefined;
   refetch: () => void;
 }
 
-export default function TransactionTable(props: PropTypes) {
-  const { transactions, isPending, refetch } = props;
+export default function InvoiceTable(props: PropTypes) {
+  const { invoices, isPending, refetch } = props;
 
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+  const [selectedInvoice, setSelectedInvoice] =
+    useState<IInvoiceExtended | null>(null);
 
   const { open: openDeleteDialog, setOpen: setOpenDeleteDialog } =
     useDisclosure();
+  const { open: openDetailDialog, setOpen: setOpenDetailDialog } =
+    useDisclosure();
   const { open: openEditDialog, setOpen: setOpenEditDialog } = useDisclosure();
 
-  const {
-    mutate: mutateDeleteTransaction,
-    isPending: isPendingDeleteTransaction,
-  } = useMutation({
-    mutationFn: (id: string) => deleteTransaction(id),
-    onSuccess: () => {
-      refetch();
-      toast.success("Transaksi berhasil dihapus");
-      setSelectedTransaction(null);
+  const getTableActions = (invoice: IInvoiceExtended) => [
+    {
+      label: "Detail",
+      icon: <ExternalLinkIcon />,
+      handleClick: () => {
+        setSelectedInvoice(invoice);
+        setOpenDetailDialog(true);
+      },
     },
-    onError: () => {
-      toast.error("Gagal menghapus transaksi");
+    {
+      label: "Edit",
+      icon: <PencilIcon />,
+      handleClick: () => {
+        setSelectedInvoice(invoice);
+        setOpenEditDialog(true);
+      },
     },
-  });
+    {
+      label: "Hapus",
+      icon: <Trash2Icon />,
+      handleClick: () => {
+        setOpenDeleteDialog(true);
+      },
+      isDestructive: true,
+    },
+  ];
+
+  const { mutate: mutateDeleteInvoice, isPending: isPendingDeleteInvoice } =
+    useMutation({
+      mutationFn: (id: string) => deleteInvoice(id),
+      onSuccess: () => {
+        refetch();
+        toast.success("Tagihan berhasil dihapus");
+        setSelectedInvoice(null);
+      },
+      onError: () => {
+        toast.error("Gagal menghapus tagihan");
+      },
+    });
 
   return (
     <Fragment>
@@ -108,66 +125,34 @@ export default function TransactionTable(props: PropTypes) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions?.map((transaction, index) => {
+          {invoices?.map((invoice, index) => {
             return (
-              <TableRow key={transaction.id}>
+              <TableRow key={invoice.id}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell className="font-medium">
-                  {transaction.date.toLocaleDateString()}
+                <TableCell>{invoice.date.toLocaleDateString()}</TableCell>
+                <TableCell>{invoice.description}</TableCell>
+                <TableCell>
+                  <Badge
+                    className={cn(
+                      "text-black",
+                      invoice.status === "PAID" && "bg-green-100 hover:bg-green-100",
+                      invoice.status === "PARTIALLY_PAID" && "bg-yellow-100 hover:bg-yellow-100",
+                      invoice.status === "UNPAID" && "bg-red-100 hover:bg-red-100",
+                    )}
+                  >
+                    {getInvoiceStatus(invoice.status)}
+                  </Badge>
                 </TableCell>
-                <TableCell
-                  className={cn(
-                    "flex items-center",
-                    transaction.type === "INCOME"
-                      ? "text-green-700"
-                      : "text-red-700",
-                  )}
-                >
-                  {transaction.type === "INCOME" ? (
-                    <PlusIcon className="size-4" />
-                  ) : (
-                    <MinusIcon className="size-4" />
-                  )}
-                  {convertToIDR(transaction.amount)}
-                </TableCell>
-                <TableCell>{transaction.description}</TableCell>
                 <TableCell className="flex gap-2">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="text-muted-foreground"
-                        size={"icon"}
-                        onClick={() => {
-                          setSelectedTransaction(transaction);
-                          setOpenEditDialog(true);
-                        }}
-                      >
-                        <PencilIcon className="size-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <div>Edit</div>
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="text-muted-foreground hover:text-destructive"
-                        size={"icon"}
-                        onClick={() => {
-                          setSelectedTransaction(transaction);
-                          setOpenDeleteDialog(true);
-                        }}
-                      >
-                        <Trash2Icon className="size-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <div>Hapus</div>
-                    </TooltipContent>
-                  </Tooltip>
+                  {getTableActions(invoice).map((action, index) => (
+                    <InvoiceTableAction
+                      key={`table-action-${index}`}
+                      handleClick={action.handleClick}
+                      icon={action.icon}
+                      label={action.label}
+                      isDestructive={action.isDestructive}
+                    />
+                  ))}
                 </TableCell>
               </TableRow>
             );
@@ -178,7 +163,7 @@ export default function TransactionTable(props: PropTypes) {
             <Spinner variant="circle" />
           </TableCaption>
         )}
-        {!isPending && transactions?.length === 0 && (
+        {!isPending && invoices?.length === 0 && (
           <TableCaption className="mb-4">Belum ada data transaksi</TableCaption>
         )}
       </Table>
@@ -231,19 +216,26 @@ export default function TransactionTable(props: PropTypes) {
               ''
             )}
           </div> */}
-      <DeleteTransactionDialog
-        transactionId={selectedTransaction?.id ?? ""}
+      <DeleteInvoiceDialog
+        invoiceId={selectedInvoice?.id ?? ""}
         open={openDeleteDialog}
         setOpen={setOpenDeleteDialog}
-        mutateDeleteTransaction={mutateDeleteTransaction}
-        isPending={isPendingDeleteTransaction}
+        mutateDeleteInvoice={mutateDeleteInvoice}
+        isPending={isPendingDeleteInvoice}
       />
-      <EditTransactionDialog
-        transaction={selectedTransaction}
+      <EditInvoiceDialog
         open={openEditDialog}
         setOpen={setOpenEditDialog}
+        invoice={selectedInvoice}
+        setSelectedInvoice={setSelectedInvoice}
         refetch={refetch}
-        setSelectedTransaction={setSelectedTransaction}
+      />
+      <DetailInvoiceDialog
+        invoice={selectedInvoice}
+        open={openDetailDialog}
+        setOpen={setOpenDetailDialog}
+        refetch={refetch}
+        setSelectedInvoice={setSelectedInvoice}
       />
     </Fragment>
   );

@@ -27,11 +27,6 @@ const TEAM_MEMBERS = [
     image: "/assets/profiles/eagel.png",
   },
   {
-    name: "Diva",
-    role: "Designer",
-    image: "/assets/profiles/diva.png",
-  },
-  {
     name: "Masyitah",
     role: "Designer",
     image: "/assets/profiles/masyitah.png",

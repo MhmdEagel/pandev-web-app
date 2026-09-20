@@ -19,17 +19,19 @@ export default function PortfolioContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
-  const statusFilters = searchParams.get("status")?.split(",").filter(Boolean) || [];
-  const categoryFilters = searchParams.get("category")?.split(",").filter(Boolean) || [];
+  const statusFilters =
+    searchParams.get("status")?.split(",").filter(Boolean) || [];
+  const categoryFilters =
+    searchParams.get("category")?.split(",").filter(Boolean) || [];
   const currentPage = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || DEFAULT_LIMIT;
 
-  const { data: result, isLoading } = useQuery({
+  const { data: portfolios, isLoading } = useQuery({
     queryKey: ["portfolios"],
     queryFn: getPortfolios,
   });
 
-  const allPortfolios = result?.success && result.data ? result.data : [];
+  const allPortfolios = portfolios ?? [];
 
   const filteredPortfolios = useMemo(() => {
     return allPortfolios.filter((portfolio) => {
@@ -40,17 +42,24 @@ export default function PortfolioContent() {
         const techStacks = Array.isArray(portfolio.tech_stacks)
           ? (portfolio.tech_stacks as string[])
           : [];
-        const techMatch = techStacks.some((tech) =>
-          typeof tech === "string" && tech.toLowerCase().includes(query),
+        const techMatch = techStacks.some(
+          (tech) =>
+            typeof tech === "string" && tech.toLowerCase().includes(query),
         );
         if (!nameMatch && !categoryMatch && !techMatch) return false;
       }
 
-      if (statusFilters.length > 0 && !statusFilters.includes(portfolio.status)) {
+      if (
+        statusFilters.length > 0 &&
+        !statusFilters.includes(portfolio.status)
+      ) {
         return false;
       }
 
-      if (categoryFilters.length > 0 && !categoryFilters.includes(portfolio.category)) {
+      if (
+        categoryFilters.length > 0 &&
+        !categoryFilters.includes(portfolio.category)
+      ) {
         return false;
       }
 
@@ -87,7 +96,10 @@ export default function PortfolioContent() {
 
   const handleLimitChange = useCallback(
     (newLimit: number) => {
-      updateParam("limit", newLimit === DEFAULT_LIMIT ? null : String(newLimit));
+      updateParam(
+        "limit",
+        newLimit === DEFAULT_LIMIT ? null : String(newLimit),
+      );
     },
     [updateParam],
   );
@@ -119,7 +131,8 @@ export default function PortfolioContent() {
     router.push(`?${params.toString()}`);
   }, [router, searchParams]);
 
-  const hasActiveFilters = statusFilters.length > 0 || categoryFilters.length > 0 || !!searchQuery;
+  const hasActiveFilters =
+    statusFilters.length > 0 || categoryFilters.length > 0 || !!searchQuery;
 
   return (
     <div className="space-y-4">
@@ -133,7 +146,6 @@ export default function PortfolioContent() {
           </Button>
         </Link>
       </div>
-
 
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">

@@ -12,17 +12,29 @@ enum Role {
   USER
 }
 
+enum InvoiceStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   fullname      String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
+  email         String      @unique
+  emailVerified Boolean     @default(false)
   image         String?
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  role          Role        @default(USER)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   sessions      Session[]
   accounts      Account[]
+  portfolios    Portfolio[]
 }
 
 model Session {
@@ -85,6 +97,8 @@ model Portfolio {
   galery          PortfolioGalery[]
   created_at      DateTime          @default(now())
   updated_at      DateTime          @updatedAt
+  user            User?             @relation(fields: [created_by], references: [id], onDelete: Cascade)
+  created_by      String
 }
 
 model PortfolioGalery {
@@ -98,20 +112,30 @@ model PortfolioGalery {
 }
 
 model Transaction {
-  id               String            @id @default(uuid())
-  type             String
-  description      String
-  date             DateTime          @default(now())
-  status           String            @default("in_progress")
-  created_at       DateTime          @default(now())
-  updated_at       DateTime          @updatedAt
-  transactionItems TransactionItem[]
+  id          String          @id @default(uuid())
+  type        TransactionType
+  amount      Float
+  description String
+  date        DateTime        @default(now())
+  created_at  DateTime        @default(now())
+  updated_at  DateTime        @updatedAt
 }
 
-model TransactionItem {
-  id            String       @id @default(uuid())
-  name          String
-  price         Float
-  transaction   Transaction? @relation(fields: [transactionId], references: [id])
-  transactionId String?
+model Invoice {
+  id            String        @id @default(uuid())
+  description   String
+  date          DateTime      @default(now())
+  status        InvoiceStatus @default(UNPAID)
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  invoice_items InvoiceItem[]
+}
+
+model InvoiceItem {
+  id        String   @id @default(uuid())
+  name      String
+  quantity  Int
+  price     Float
+  invoice   Invoice? @relation(fields: [invoice_id], references: [id])
+  invoice_id String?
 }

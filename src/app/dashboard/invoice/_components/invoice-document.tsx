@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import { ITransactionExtended } from "../_types/Transaction";
+import { IInvoiceExtended } from "../_types/Invoice";
 import { convertToIDR } from "@/lib/utils";
 import { format } from "date-fns";
 
@@ -81,14 +81,21 @@ const styles = StyleSheet.create({
   tableCell: {
     fontSize: 12,
   },
-  colIndex: {
-    width: "10%",
+  colItemIndex: {
+    width: "8%",
   },
-  colName: {
-    width: "60%",
+  colItemName: {
+    width: "32%",
   },
-  colPrice: {
-    width: "30%",
+  colItemQty: {
+    width: "15%",
+  },
+  colItemPrice: {
+    width: "22%",
+  },
+  colItemTotal: {
+    width: "23%",
+    textAlign: "right",
   },
   downPaymentContainer: {
     marginTop: 15,
@@ -134,14 +141,14 @@ const styles = StyleSheet.create({
 });
 
 interface PropTypes {
-  transaction: ITransactionExtended;
+  invoice: IInvoiceExtended;
 }
 
-export default function TransactionDocument(props: PropTypes) {
-  const { transaction } = props;
+export default function InvoiceDocument(props: PropTypes) {
+  const { invoice } = props;
 
   let totalPrice = 0;
-  transaction.transactionItems.map((item) => (totalPrice += item.price));
+  invoice.invoice_items.map((item) => (totalPrice += item.price * item.quantity));
 
   return (
     <Document>
@@ -161,27 +168,41 @@ export default function TransactionDocument(props: PropTypes) {
         <View style={styles.dateRow}>
           <Text style={styles.dateLabel}>Date: </Text>
           <Text style={styles.dateValue}>
-            {format(transaction.date.toISOString(), "dd-MM-yyyy")}
+            {format(invoice.date.toISOString(), "dd-MM-yyyy")}
           </Text>
         </View>
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, styles.colIndex]}>#</Text>
-            <Text style={[styles.tableHeaderCell, styles.colName]}>
-              Transaction Item
+            <Text style={[styles.tableHeaderCell, styles.colItemIndex]}>#</Text>
+            <Text style={[styles.tableHeaderCell, styles.colItemName]}>
+              Name
             </Text>
-            <Text style={[styles.tableHeaderCell, styles.colPrice]}>Price</Text>
+            <Text style={[styles.tableHeaderCell, styles.colItemQty]}>
+              Qty
+            </Text>
+            <Text style={[styles.tableHeaderCell, styles.colItemPrice]}>
+              Price
+            </Text>
+            <Text style={[styles.tableHeaderCell, styles.colItemTotal]}>
+              Total
+            </Text>
           </View>
-          {transaction.transactionItems.map((item, index) => (
-            <View key={`transaction-item-${index}`} style={styles.tableRow}>
-              <Text style={[styles.tableCell, styles.colIndex]}>
+          {invoice.invoice_items.map((item, index) => (
+            <View key={`item-${index}`} style={styles.tableRow}>
+              <Text style={[styles.tableCell, styles.colItemIndex]}>
                 {index + 1}
               </Text>
-              <Text style={[styles.tableCell, styles.colName]}>
+              <Text style={[styles.tableCell, styles.colItemName]}>
                 {item.name}
               </Text>
-              <Text style={[styles.tableCell, styles.colPrice]}>
+              <Text style={[styles.tableCell, styles.colItemQty]}>
+                {item.quantity}
+              </Text>
+              <Text style={[styles.tableCell, styles.colItemPrice]}>
                 {convertToIDR(item.price)}
+              </Text>
+              <Text style={[styles.tableCell, styles.colItemTotal]}>
+                {convertToIDR(item.price * item.quantity)}
               </Text>
             </View>
           ))}

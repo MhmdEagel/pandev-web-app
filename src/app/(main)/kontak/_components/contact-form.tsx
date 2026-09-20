@@ -1,13 +1,10 @@
 "use client";
 
-import { sendEmail } from "@/actions/email";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { env } from "@/lib/env";
-import { useMutation } from "@tanstack/react-query";
 import { MailIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -78,7 +75,7 @@ export default function ContactForm() {
                 <Input
                   {...field}
                   id="name"
-                  placeholder="Jane Doe"
+                  placeholder="Masukkan nama Anda..."
                   aria-invalid={fieldState.invalid}
                   className="bg-white/5 border-white/20 placeholder:text-white/70"
                 />
@@ -97,7 +94,7 @@ export default function ContactForm() {
                   id="email"
                   type="email"
                   aria-invalid={fieldState.invalid}
-                  placeholder="janedoe@email.com"
+                  placeholder="Masukkan email Anda..."
                   className="bg-white/5 border-white/20 placeholder:text-white/70"
                 />
                 <FieldError>{fieldState.error?.message}</FieldError>
@@ -116,7 +113,7 @@ export default function ContactForm() {
                   rows={5}
                   aria-invalid={fieldState.invalid}
                   placeholder="Tulis pesan disini..."
-                  className="w-full min-h-30 rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-base focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 outline-none resize-none"
+                  className="w-full min-h-30 rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-base focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 outline-none resize-none placeholder:text-white/70"
                 />
                 <FieldError>{fieldState.error?.message}</FieldError>
               </div>

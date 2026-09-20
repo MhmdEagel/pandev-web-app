@@ -1,5 +1,6 @@
 "use client";
 
+import { createUser } from "@/app/actions/user-management";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Field,
@@ -24,14 +24,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { addUser } from "@/app/actions/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PlusIcon, EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+
+interface PropTypes {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  refetch: () => void;
+}
 
 const formSchema = z.object({
   fullname: z.string().min(1, "Nama wajib diisi"),
@@ -40,10 +45,9 @@ const formSchema = z.object({
   role: z.enum(["ADMIN", "USER"], { error: "Role wajib dipilih" }),
 });
 
-export default function AddUserDialog() {
-  const [open, setOpen] = useState(false);
+export default function CreateUserDialog(props: PropTypes) {
+  const { open, setOpen, refetch } = props;
   const [showPassword, setShowPassword] = useState(false);
-  const queryClient = useQueryClient();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,38 +60,22 @@ export default function AddUserDialog() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: z.infer<typeof formSchema>) => {
-      const result = await addUser(data);
-      if (!result.success) {
-        throw new Error(result.error);
-      }
-      return result;
-    },
+    mutationFn: async (data: z.infer<typeof formSchema>) => createUser(data),
     onSuccess: () => {
       toast.success("User berhasil dibuat");
-      queryClient.invalidateQueries({ queryKey: ["users"] });
       form.reset();
+      refetch();
       setOpen(false);
     },
     onError: (error) => {
       toast.error(error.message || "Gagal membuat user");
     },
   });
-
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     mutate(data);
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <div className="px-4">
-          <Button>
-            <PlusIcon className="size-4 mr-2" />
-            Tambah User
-          </Button>
-        </div>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Tambah User Baru</DialogTitle>
@@ -169,14 +157,8 @@ export default function AddUserDialog() {
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel htmlFor="role">Role</FieldLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      id="role"
-                      aria-invalid={fieldState.invalid}
-                    >
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="role" aria-invalid={fieldState.invalid}>
                       <SelectValue placeholder="Pilih role" />
                     </SelectTrigger>
                     <SelectContent>

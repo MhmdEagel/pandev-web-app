@@ -21,10 +21,10 @@ import AvatarDropzoneDialog from "./avatar-dropzone-dialog";
 
 interface PropTypes {
   userImageUrl?: string | null;
-  onsuccess?: () => void;
+  refetchSession: () => void;
 }
 
-export default function AvatarForm({ userImageUrl, onsuccess }: PropTypes) {
+export default function AvatarForm({ userImageUrl, refetchSession }: PropTypes) {
   const [open, setOpen] = useState(false);
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
@@ -44,7 +44,7 @@ export default function AvatarForm({ userImageUrl, onsuccess }: PropTypes) {
     }
 
     toast.success("Avatar berhasil dihapus");
-    onsuccess?.();
+    refetchSession();
   };
 
   const handleEditClick = () => {
@@ -113,7 +113,7 @@ export default function AvatarForm({ userImageUrl, onsuccess }: PropTypes) {
         setOpen={setOpen}
         currentImageUrl={userImageUrl ?? null}
         onSaved={() => {
-          onsuccess?.();
+         refetchSession();
         }}
       />
     </>

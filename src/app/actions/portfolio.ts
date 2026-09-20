@@ -2,29 +2,44 @@
 
 import { prisma } from "@/lib/prisma";
 import { deleteMultipleMedia } from "./media";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function getPortfolioByUuid(uuid: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    throw new Error("Terjadi kesalahan, coba beberapa saat lagi.");
+  }
+  const user = session.user;
   try {
     const portfolio = await prisma.portfolio.findUnique({
-      where: { id: uuid },
+      where: { id: uuid, created_by: user.id },
       include: { galery: true },
     });
 
     if (!portfolio) {
-      return { success: false, error: "Portofolio tidak ditemukan" };
+      throw new Error("Portfolio tidak ditemukan");
     }
 
-    return { success: true, data: portfolio };
+    return portfolio;
   } catch (error) {
-    console.error("Error fetching portfolio:", error);
-    return { success: false, error: "Gagal mengambil data portofolio" };
+    throw error;
   }
 }
 
 export async function deletePortfolio(uuid: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    throw new Error("Gagal menghapus portfolio");
+  }
+  const user = session.user;
   try {
     const portfolio = await prisma.portfolio.findUnique({
-      where: { id: uuid },
+      where: { id: uuid, created_by: user.id },
       include: { galery: true },
     });
 
@@ -49,24 +64,32 @@ export async function deletePortfolio(uuid: string) {
     await prisma.portfolio.delete({
       where: { id: uuid },
     });
-
-    return { success: true };
+    return portfolio;
   } catch (error) {
     console.error("Error deleting portfolio:", error);
-    return { success: false, error: "Gagal menghapus portofolio" };
+    throw error;
   }
 }
 
 export async function getPortfolios() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    throw new Error("Terjadi kesalahan");
+  }
+  const user = session.user;
+
   try {
     const portfolios = await prisma.portfolio.findMany({
       orderBy: { created_at: "desc" },
+      where: { created_by: user.id },
       include: { galery: true },
     });
-    return { success: true, data: portfolios };
+    return portfolios;
   } catch (error) {
     console.error("Error fetching portfolios:", error);
-    return { success: false, error: "Gagal mengambil data portofolio" };
+    throw error;
   }
 }
 
@@ -83,6 +106,13 @@ interface CreatePortfolioInput {
 }
 
 export async function createPortfolio(data: CreatePortfolioInput) {
+  const session = await auth.api.getSession({
+    headers: await headers(), // you need to pass the headers object.
+  });
+  if (!session) {
+    throw new Error("Terjadi kesalahn");
+  }
+  const user = session.user;
   try {
     const portfolio = await prisma.portfolio.create({
       data: {
@@ -99,16 +129,15 @@ export async function createPortfolio(data: CreatePortfolioInput) {
             image_url: url,
           })),
         },
+        created_by: user.id,
       },
       include: {
         galery: true,
       },
     });
-
-    return { success: true, data: portfolio };
+    return portfolio;
   } catch (error) {
-    console.error("Error creating portfolio:", error);
-    return { success: false, error: "Gagal membuat portofolio" };
+    throw error;
   }
 }
 
@@ -126,6 +155,13 @@ interface UpdatePortfolioInput {
 }
 
 export async function updatePortfolio(data: UpdatePortfolioInput) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    throw new Error("Terjadi kesalahan");
+  }
+  const user = session.user;
   try {
     const existing = await prisma.portfolio.findUnique({
       where: { id: data.uuid },
@@ -133,7 +169,7 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
     });
 
     if (!existing) {
-      return { success: false, error: "Portofolio tidak ditemukan" };
+      throw new Error("Portfolio tidak ditemukan");
     }
 
     if (data.thumbnail !== existing.thumbnail) {
@@ -154,7 +190,7 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
     });
 
     const portfolio = await prisma.portfolio.update({
-      where: { id: data.uuid },
+      where: { id: data.uuid, created_by: user.id },
       data: {
         thumbnail: data.thumbnail || "",
         name: data.name,
@@ -173,9 +209,8 @@ export async function updatePortfolio(data: UpdatePortfolioInput) {
       include: { galery: true },
     });
 
-    return { success: true, data: portfolio };
+    return portfolio;
   } catch (error) {
-    console.error("Error updating portfolio:", error);
-    return { success: false, error: "Gagal mengupdate portofolio" };
+    throw error;
   }
 }

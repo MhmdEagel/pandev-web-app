@@ -3,13 +3,7 @@
 import { createTransaction } from "@/app/actions/transaction";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import {
   Field,
   FieldError,
@@ -27,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import {
@@ -38,7 +32,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { PlusIcon, XIcon } from "lucide-react";
+import { Transaction } from "@prisma/client";
 import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
@@ -51,11 +45,13 @@ const formSchema = z.object({
 interface PropTypes {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  transaction: Transaction | null;
+  setSelectedTransaction: Dispatch<SetStateAction<Transaction | null>>;
   refetch: () => void;
 }
 
-export default function CreateTransactionDialog(props: PropTypes) {
-  const { open, setOpen, refetch } = props;
+export default function EditTransactionDialog(props: PropTypes) {
+  const { open, setOpen, refetch, transaction, setSelectedTransaction } = props;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -73,6 +69,7 @@ export default function CreateTransactionDialog(props: PropTypes) {
       toast.success("Berhasil membuat transaksi");
       form.reset();
       setOpen(false);
+      setSelectedTransaction(null);
       refetch();
     },
     onError: (error) => {
@@ -86,13 +83,22 @@ export default function CreateTransactionDialog(props: PropTypes) {
 
   const formRef = useRef<HTMLFormElement>(null);
 
+  useEffect(() => {
+    if (transaction) {
+      form.setValue("type", transaction.type);
+      form.setValue("description", transaction.description);
+      form.setValue("amount", transaction.amount);
+      form.setValue("date", transaction.date.toISOString().split("T")[0]);
+    }
+  }, [transaction]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader className="border-b pb-2">
-          <DialogTitle>Buat Transaksi</DialogTitle>
+          <DialogTitle>Edit Transaksi</DialogTitle>
           <DialogDescription>
-            Isi form di bawah ini untuk menambahkan transaksi
+            Edit transaksi yang sudah dibuat
           </DialogDescription>
         </DialogHeader>
         <form

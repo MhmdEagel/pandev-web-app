@@ -98,17 +98,12 @@ export default function CreatePortfolioForm() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: createPortfolio,
-    onSuccess: (result) => {
-      if (result.success) {
-        uploadedFilesRef.current = [];
-        toast.success("Portofolio berhasil dibuat");
-        router.push("/dashboard/portfolio");
-      } else {
-        toast.error(result.error || "Gagal membuat portofolio");
-      }
+    onSuccess: () => {
+      toast.success("Portfolio berhasi dibuat");
+      router.push("/dashboard/portfolio")
     },
     onError: (error) => {
-      toast.error(`Gagal membuat portofolio: ${error.message}`);
+      toast.error(`Gagal membuat portofolio`);
     },
   });
 
@@ -163,6 +158,7 @@ export default function CreatePortfolioForm() {
                           id="name"
                           aria-invalid={fieldState.invalid}
                           placeholder="Nama projek..."
+                          autoComplete="off"
                         />
                         <FieldError>{fieldState.error?.message}</FieldError>
                       </Field>
@@ -205,9 +201,7 @@ export default function CreatePortfolioForm() {
                           <SelectContent>
                             <SelectGroup>
                               <SelectItem value="draft">Draft</SelectItem>
-                              <SelectItem value="published">
-                                Publish
-                              </SelectItem>
+                              <SelectItem value="published">Publish</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -223,7 +217,10 @@ export default function CreatePortfolioForm() {
                         <FieldLabel htmlFor="category-form">
                           Kategori
                         </FieldLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
                           <SelectTrigger aria-invalid={fieldState.invalid}>
                             <SelectValue
                               id="category-form"
@@ -257,6 +254,7 @@ export default function CreatePortfolioForm() {
                           id="demo-link-form"
                           aria-invalid={fieldState.invalid}
                           placeholder="Link demo..."
+                          autoComplete="off"
                         />
                         <FieldError>{fieldState.error?.message}</FieldError>
                       </Field>
@@ -275,6 +273,7 @@ export default function CreatePortfolioForm() {
                           id="repo-link-form"
                           aria-invalid={fieldState.invalid}
                           placeholder="Link repository..."
+                          autoComplete="off"
                         />
                         <FieldError>{fieldState.error?.message}</FieldError>
                       </Field>

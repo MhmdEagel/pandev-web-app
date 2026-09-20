@@ -1,6 +1,5 @@
 "use client";
 
-import { getTransactions } from "@/app/actions/transaction";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,36 +11,38 @@ import {
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { FilterIcon, PlusIcon } from "lucide-react";
+import { useState } from "react";
 import { Fragment } from "react/jsx-runtime";
-import TransactionTable from "./transaction-table";
-import CreateTransactionDialog from "./create-transaction-dialog";
-import { useDisclosure } from "@/hooks/use-disclosure";
+import InvoiceTable from "./invoice-table";
+import CreateInvoiceDialog from "./create-invoice-dialog";
+import { getInvoices } from "@/app/actions/invoice";
+import { IInvoiceExtended } from "../_types/Invoice";
 
-export default function TransactionContent() {
+export default function InvoiceContent() {
   const {
     isPending,
-    data: transactions,
+    data: invoices,
     refetch,
   } = useQuery({
-    queryFn: getTransactions,
-    queryKey: ["transactions"],
+    queryFn: getInvoices,
+    queryKey: ["invoices"],
   });
-  const {open, setOpen} = useDisclosure()
+  const [open, setOpen] = useState(false);
   return (
     <Fragment>
       <Card className="w-full gap-2">
         <CardHeader className="flex items-center justify-between border-b">
           <div>
             <div className="flex gap-2">
-              <CardTitle>Data Transaksi</CardTitle>
-              {transactions && transactions?.length > 0 ? (
+              <CardTitle>Data Faktur</CardTitle>
+              {invoices && invoices?.length > 0 ? (
                 <Badge className="bg-green-100 text-primary px-1 hover:bg-green-100">
-                  Total {transactions?.length}
+                  Total {invoices?.length}
                 </Badge>
               ) : null}
             </div>
             <CardDescription>
-              Berikut semua data transaksi yang ada
+              Berikut semua data faktur yang ada
             </CardDescription>
           </div>
           <div className="space-x-2">
@@ -54,18 +55,14 @@ export default function TransactionContent() {
           </div>
         </CardHeader>
         <CardContent>
-          <TransactionTable
+          <InvoiceTable
             isPending={isPending}
-            transactions={transactions}
+            invoices={invoices as IInvoiceExtended[]}
             refetch={refetch}
           />
         </CardContent>
       </Card>
-      <CreateTransactionDialog
-        open={open}
-        setOpen={setOpen}
-        refetch={refetch}
-      />
+      <CreateInvoiceDialog open={open} setOpen={setOpen} refetch={refetch} />
     </Fragment>
   );
 }
